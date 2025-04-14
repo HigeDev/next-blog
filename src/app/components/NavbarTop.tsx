@@ -1,10 +1,5 @@
 "use client";
 import {
-  Avatar,
-  Dropdown,
-  DropdownDivider,
-  DropdownHeader,
-  DropdownItem,
   Navbar,
   NavbarBrand,
   NavbarCollapse,
@@ -14,10 +9,12 @@ import {
   Button,
 } from "flowbite-react";
 import * as React from "react";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineLogin } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function NavbarTop() {
   const path = usePathname();
@@ -67,29 +64,18 @@ export default function NavbarTop() {
           )}
         </button>
 
-        <Dropdown
-          arrowIcon={false}
-          inline
-          label={
-            <Avatar
-              alt="User settings"
-              img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-              rounded
-            />
-          }
-        >
-          <DropdownHeader>
-            <span className="block text-sm">Bonnie Green</span>
-            <span className="block truncate text-sm font-medium">
-              name@flowbite.com
-            </span>
-          </DropdownHeader>
-          <DropdownItem>Dashboard</DropdownItem>
-          <DropdownItem>Settings</DropdownItem>
-          <DropdownItem>Earnings</DropdownItem>
-          <DropdownDivider />
-          <DropdownItem>Sign out</DropdownItem>
-        </Dropdown>
+        <SignedIn>
+          <UserButton userProfileUrl="/dashboard?tab=profile" />
+        </SignedIn>
+        <SignedOut>
+          <Link href="/sign-in">
+            <Button color="alternative">
+              <AiOutlineLogin className="me-2 h-4 w-4" />
+              Login
+            </Button>
+          </Link>
+        </SignedOut>
+
         <NavbarToggle />
       </div>
       <NavbarCollapse>
