@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import DashSidebar from "../components/DashSidebar";
 import DashProfile from "../components/DashProfile";
 import { useSearchParams } from "next/navigation";
-import DashUsers from "../components/DashUsers";
 import DashboardComp from "../components/DashboardComp";
 export default function Dashboard() {
   const searchParams = useSearchParams();
@@ -24,8 +23,6 @@ export default function Dashboard() {
       </div>
       {/* profile... */}
       {tab === "profile" && <DashProfile />}
-
-      {tab === "users" && <DashUsers />}
       {tab === "dash" && <DashboardComp />}
     </div>
   );
