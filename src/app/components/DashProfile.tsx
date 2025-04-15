@@ -1,7 +1,6 @@
 "use client";
 
 import { UserProfile } from "@clerk/nextjs";
-import { useTheme } from "next-themes";
 
 export default function DashProfile() {
   return (
