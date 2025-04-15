@@ -40,17 +40,19 @@ export default function NavbarTop() {
           Flowbite React
         </span>
       </NavbarBrand>
-      <form>
-        <TextInput
-          type="text"
-          placeholder="Search..."
-          rightIcon={AiOutlineSearch}
-          className="hidden lg:inline"
-        />
-      </form>
-      <Button className="w-12 h-10 lg:hidden" color="gray" pill>
-        <AiOutlineSearch />
-      </Button>
+      <SignedIn>
+        <form>
+          <TextInput
+            type="text"
+            placeholder="Search..."
+            rightIcon={AiOutlineSearch}
+            className="hidden lg:inline"
+          />
+        </form>
+        <Button className="w-12 h-10 lg:hidden" color="gray" pill>
+          <AiOutlineSearch />
+        </Button>
+      </SignedIn>
       <div className="flex md:order-2">
         <button
           onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -76,19 +78,23 @@ export default function NavbarTop() {
           </Link>
         </SignedOut>
 
-        <NavbarToggle />
+        <SignedIn>
+          <NavbarToggle />
+        </SignedIn>
       </div>
-      <NavbarCollapse>
-        <NavbarLink href="/" active={path === "/"}>
-          Home
-        </NavbarLink>
-        <NavbarLink href="/about" active={path === "/about"}>
-          About
-        </NavbarLink>
-        <NavbarLink href="/projects" active={path === "/projects"}>
-          Projects
-        </NavbarLink>
-      </NavbarCollapse>
+      <SignedIn>
+        <NavbarCollapse>
+          <NavbarLink href="/" active={path === "/"}>
+            Home
+          </NavbarLink>
+          <NavbarLink href="/about" active={path === "/about"}>
+            About
+          </NavbarLink>
+          <NavbarLink href="/projects" active={path === "/projects"}>
+            Projects
+          </NavbarLink>
+        </NavbarCollapse>
+      </SignedIn>
     </Navbar>
   );
 }
