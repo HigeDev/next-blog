@@ -1,1 +1,3 @@
-module.exports = { ...require('.') }
+import * as module from ".";
+
+export default { ...module };
