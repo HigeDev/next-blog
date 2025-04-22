@@ -14,10 +14,17 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
+  firstName       String?
+  lastName        String?
+  username        String?
+  profilePicture  String?
+  clerkUserId     String   @unique
+  isAdmin         Boolean @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  posts           Post[]
 }
 
 model Post {
