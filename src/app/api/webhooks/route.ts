@@ -15,8 +15,15 @@ export async function POST(req: Request) {
         username,
       } = evt.data;
       try {
-        const newUser = await prisma.user.create({
-          data: {
+        const newUser = await prisma.user.upsert({
+          where: { email: email_addresses[0].email_address },
+          update: {
+            firstName: first_name,
+            lastName: last_name,
+            profilePicture: image_url,
+            username: username,
+          },
+          create: {
             clerkUserId: id,
             email: email_addresses[0].email_address,
             firstName: first_name,
@@ -30,6 +37,7 @@ export async function POST(req: Request) {
           try {
             await client.users.updateUserMetadata(id, {
               publicMetadata: {
+                userId: newUser.id,
                 isAdmin: newUser.isAdmin,
               },
             });
