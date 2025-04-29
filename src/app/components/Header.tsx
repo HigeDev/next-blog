@@ -17,7 +17,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function NavbarTop() {
+export default function Header() {
   const path = usePathname();
   const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
