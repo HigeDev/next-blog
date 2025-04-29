@@ -33,8 +33,8 @@ export const POST = async (req: Request) => {
 
     if (data.searchTerm) {
       whereClause.OR = [
-        { title: { contains: data.searchTerm, mode: "insensitive" } },
-        { content: { contains: data.searchTerm, mode: "insensitive" } },
+        { title: { contains: data.searchTerm } },
+        { content: { contains: data.searchTerm } },
       ];
     }
 
@@ -44,6 +44,7 @@ export const POST = async (req: Request) => {
       skip: startIndex,
       take: limit,
     });
+    // console.log(posts);
 
     const totalPosts = await prisma.post.count();
 

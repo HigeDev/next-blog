@@ -8,29 +8,45 @@ import {
   TextInput,
   Button,
 } from "flowbite-react";
-import * as React from "react";
 import { AiOutlineSearch, AiOutlineLogin } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function NavbarTop() {
   const path = usePathname();
   const { theme, setTheme } = useTheme();
-  const [isMounted, setIsMounted] = React.useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
+  const searchParams = useSearchParams();
 
-  React.useEffect(() => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(searchParams);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    router.push(`/search?${searchQuery}`);
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(searchParams);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
     setIsMounted(true);
-  }, []);
-
+  }, [searchParams]);
   if (!isMounted) {
     return null; // Hindari render sampai client-side
   }
   return (
     <Navbar fluid rounded>
-      <NavbarBrand href="https://flowbite-react.com">
+      <NavbarBrand href={process.env.NEXT_PUBLIC_URL}>
         <img
           src="/favicon.ico"
           className="mr-3 h-6 sm:h-9"
@@ -41,12 +57,14 @@ export default function NavbarTop() {
         </span>
       </NavbarBrand>
       <SignedIn>
-        <form>
+        <form onSubmit={handleSubmit}>
           <TextInput
             type="text"
             placeholder="Search..."
             rightIcon={AiOutlineSearch}
             className="hidden lg:inline"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </form>
         <Button className="w-12 h-10 lg:hidden" color="gray" pill>
