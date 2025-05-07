@@ -28,7 +28,7 @@ export default function CreatePostPage() {
     formDataImg.append("file", file);
 
     try {
-      const res = await fetch("/api/upload", {
+      const res = await fetch("/api/post/image/upload", {
         method: "POST",
         body: formDataImg,
       });
@@ -79,16 +79,6 @@ export default function CreatePostPage() {
           Create a post
         </h1>
         {/* PREVIEW IMAGE */}
-        {imageUrl && (
-          <div className="mt-4">
-            <p className="mb-2">Preview:</p>
-            <img
-              src={`/uploads/${imageUrl}`}
-              alt="Preview"
-              className="max-w-xs rounded border border-gray-300"
-            />
-          </div>
-        )}
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 sm:flex-row justify-between">
             <TextInput
@@ -126,7 +116,13 @@ export default function CreatePostPage() {
               Upload Image
             </Button>
           </div>
-
+          {imageUrl && (
+            <img
+              src={`/uploads/${imageUrl}`}
+              alt="Preview"
+              className="w-full h-72 object-cover"
+            />
+          )}
           <ReactQuill
             theme="snow"
             placeholder="Write something..."

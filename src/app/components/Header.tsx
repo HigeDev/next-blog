@@ -74,7 +74,7 @@ export default function Header() {
       <div className="flex md:order-2">
         <button
           onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-300 dark:border-gray-600"
+          className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-300 dark:border-gray-600 mx-2"
           aria-label="Toggle theme"
         >
           {theme === "dark" ? (

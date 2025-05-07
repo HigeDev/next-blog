@@ -31,7 +31,7 @@ model Post {
   id              Int      @id @default(autoincrement())
   content         String   @db.Text
   title           String   @unique
-  image           String   @default("https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.png")
+  image           String   @default("DefaultImage.png")
   category        String   @default("uncategorized")
   slug            String   @unique
   user            User     @relation(fields: [userId], references: [id])
