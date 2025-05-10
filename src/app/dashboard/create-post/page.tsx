@@ -2,74 +2,83 @@
 
 import { useUser } from "@clerk/nextjs";
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
-
 import { useState } from "react";
 import dynamic from "next/dynamic";
-const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
-// https://dev.to/a7u/reactquill-with-nextjs-478b
+import { useRouter } from "next/navigation";
 import "react-quill-new/dist/quill.snow.css";
-
-import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { useRouter } from "next/navigation"; // tambahkan ini
+
+// Dynamic import for ReactQuill
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+
+// Type dipindahkan ke luar komponen
+type FormDataFields = {
+  title: string;
+  content: string;
+  category: string;
+};
 
 export default function CreatePostPage() {
   const { isSignedIn, user, isLoaded } = useUser();
+  const router = useRouter();
+
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
-  const [formData, setFormData] = useState({});
-  const router = useRouter(); // tambahkan ini di dalam komponenmu
-  const [publishError, setPublishError] = useState<string | null>(null); // tambahkan ini
+  const [publishError, setPublishError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChangeImage = async () => {
-    if (!file) return;
+  const [formData, setFormData] = useState<FormDataFields>({
+    title: "",
+    content: "",
+    category: "",
+  });
 
-    const formDataImg = new FormData();
-    formDataImg.append("file", file);
-
-    try {
-      const res = await fetch("/api/post/image/upload", {
-        method: "POST",
-        body: formDataImg,
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setImageUrl(data.url); // simpan URL dari gambar
-        console.log(data.url);
-        setFormData({ ...formData, image: data.url });
-      } else {
-        console.error("Upload gagal");
-      }
-    } catch (err) {
-      console.error("Terjadi kesalahan:", err);
-    }
-  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setPublishError(null);
+    const formDataToSend = new FormData();
+
+    // Validasi sederhana
+    if (!formData.title || !formData.content || !formData.category) {
+      setPublishError("Please fill all fields.");
+      return;
+    }
+
+    // Hanya tambahkan file jika memang dipilih
+    if (file) {
+      formDataToSend.append("file", file);
+    }
+    formDataToSend.append("userId", String(user?.publicMetadata?.userId || ""));
+
+    for (const key in formData) {
+      const value = formData[key as keyof FormDataFields];
+      formDataToSend.append(key, value);
+    }
+
     try {
+      setIsSubmitting(true);
       const res = await fetch("/api/post/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          userId: user?.publicMetadata?.userId, // pakai optional chaining
-        }),
+        body: formDataToSend,
       });
+
       const data = await res.json();
       if (!res.ok) {
-        setPublishError(data.message);
+        setPublishError(data.message || "Failed to publish.");
         return;
       }
-      if (res.ok) {
-        setPublishError(null);
-        router.push(`/post/${data.slug}`);
-      }
+
+      router.push(`/post/${data.slug}`);
     } catch (error) {
-      setPublishError("Something went wrong");
+      setPublishError("Something went wrong.");
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const handleChangeImage = (file: File) => {
+    const url = URL.createObjectURL(file);
+    setImageUrl(url);
   };
 
   if (isSignedIn && user.publicMetadata.isAdmin) {
@@ -78,30 +87,34 @@ export default function CreatePostPage() {
         <h1 className="text-center text-3xl my-7 font-semibold">
           Create a post
         </h1>
-        {/* PREVIEW IMAGE */}
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 sm:flex-row justify-between">
             <TextInput
+              name="title"
               type="text"
               placeholder="Title"
               required
-              id="title"
+              value={formData.title}
               className="flex-1"
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
             />
             <Select
+              name="category"
+              required
+              value={formData.category}
               onChange={(e) =>
                 setFormData({ ...formData, category: e.target.value })
               }
             >
-              <option value="uncategorized">Select a category</option>
+              <option value="">Select a category</option>
               <option value="javascript">JavaScript</option>
               <option value="reactjs">React.js</option>
               <option value="nextjs">Next.js</option>
             </Select>
           </div>
+
           <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
             <FileInput
               accept="image/*"
@@ -109,30 +122,39 @@ export default function CreatePostPage() {
                 const file = e.target.files?.[0];
                 if (file) {
                   setFile(file);
+                  handleChangeImage(file);
                 }
               }}
             />
-            <Button type="button" size="sm" outline onClick={handleChangeImage}>
-              Upload Image
-            </Button>
           </div>
+
           {imageUrl && (
             <img
-              src={`/uploads/${imageUrl}`}
+              src={imageUrl}
               alt="Preview"
               className="w-full h-72 object-cover"
             />
           )}
+
           <ReactQuill
             theme="snow"
             placeholder="Write something..."
             className="h-72 mb-12"
-            // required
+            value={formData.content}
             onChange={(value) => {
               setFormData({ ...formData, content: value });
             }}
           />
-          <Button type="submit">Publish</Button>
+
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Publishing..." : "Publish"}
+          </Button>
+
+          {publishError && (
+            <Alert className="mt-5" color="failure">
+              {publishError}
+            </Alert>
+          )}
         </form>
       </div>
     );

@@ -12,20 +12,26 @@ import "react-circular-progressbar/dist/styles.css";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
-interface FormData {
-  title?: string;
-  category?: string;
-  content?: string;
-  image?: string;
-}
+type FormDataFields = {
+  title: string;
+  content: string;
+  category: string;
+  image: string;
+};
 
 export default function UpdatePostPage() {
   const { isSignedIn, user, isLoaded } = useUser();
   const [file, setFile] = useState<File | null>(null);
-  const [formData, setFormData] = useState<FormData>({});
+  const [formData, setFormData] = useState<FormDataFields>({
+    title: "",
+    content: "",
+    category: "",
+    image: "",
+  });
   const router = useRouter();
   const pathname = usePathname();
   const [publishError, setPublishError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const lastSegment = pathname.split("/").pop();
   const postId = lastSegment ? parseInt(lastSegment, 10) : null;
@@ -51,30 +57,11 @@ export default function UpdatePostPage() {
     if (isSignedIn && user?.publicMetadata?.isAdmin) {
       fetchPost();
     }
-  }, [postId, isSignedIn, user?.publicMetadata?.isAdmin]);
+  }, [postId, formData.image, isSignedIn, user?.publicMetadata?.isAdmin]);
 
-  const handleChangeImage = async () => {
-    if (!file) return;
-
-    const formDataImg = new FormData();
-    formDataImg.append("file", file);
-
-    try {
-      const res = await fetch("/api/post/image/upload", {
-        method: "POST",
-        body: formDataImg,
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        console.log(data);
-        setFormData({ ...formData, image: data.url });
-      } else {
-        console.error("Upload gagal");
-      }
-    } catch (err) {
-      console.error("Terjadi kesalahan:", err);
-    }
+  const handleChangeImage = (file: File) => {
+    const url = URL.createObjectURL(file);
+    setFormData({ ...formData, image: url });
   };
   const handleRemoveImage = async () => {
     try {
@@ -109,7 +96,7 @@ export default function UpdatePostPage() {
           setPublishError("Something went wrong");
         }
       } else {
-        console.error("Upload gagal");
+        console.log("no file");
       }
     } catch (err) {
       console.error("Terjadi kesalahan:", err);
@@ -118,28 +105,45 @@ export default function UpdatePostPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setPublishError(null);
+    const formDataToSend = new FormData();
+
+    // Validasi sederhana
+    if (!formData.title || !formData.content || !formData.category) {
+      setPublishError("Please fill all fields.");
+      return;
+    }
+
+    // Hanya tambahkan file jika memang dipilih
+    if (file) {
+      formDataToSend.append("file", file);
+    }
+    formDataToSend.append("userId", String(user?.publicMetadata?.userId || ""));
+    formDataToSend.append("postId", String(postId));
+
+    for (const key in formData) {
+      const value = formData[key as keyof FormDataFields];
+      formDataToSend.append(key, value);
+    }
+
     try {
+      setIsSubmitting(true);
       const res = await fetch("/api/post/update", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          userId: user?.publicMetadata?.userId,
-          postId: postId,
-        }),
+        body: formDataToSend,
       });
 
       const data = await res.json();
-
       if (!res.ok) {
-        setPublishError(data.message || "Error saat mem-publish");
+        setPublishError(data.message || "Failed to update.");
         return;
       }
 
-      setPublishError(null);
       router.push(`/post/${data.slug}`);
     } catch (error) {
-      setPublishError("Something went wrong");
+      setPublishError("Something went wrong.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -173,19 +177,17 @@ export default function UpdatePostPage() {
               <option value="nextjs">Next.js</option>
             </Select>
           </div>
-
           <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
             <FileInput
               accept="image/*"
               onChange={(e) => {
-                const selectedFile = e.target.files?.[0];
-                if (selectedFile) setFile(selectedFile);
+                const file = e.target.files?.[0];
+                if (file) {
+                  setFile(file);
+                  handleChangeImage(file);
+                }
               }}
             />
-            <Button type="button" size="sm" outline onClick={handleChangeImage}>
-              <MdFileUpload className="me-2 h-7 w-7" />
-              Upload Image
-            </Button>
             <Button type="button" size="sm" outline onClick={handleRemoveImage}>
               <MdDelete className="me-2 h-7 w-7" />
               Remove Image
@@ -194,11 +196,16 @@ export default function UpdatePostPage() {
 
           {formData.image && (
             <img
-              src={`/uploads/${formData.image}`}
+              src={
+                formData.image.startsWith("blob:")
+                  ? formData.image
+                  : `/uploads/${formData.image}`
+              }
               alt="Preview"
               className="w-full h-72 object-cover"
             />
           )}
+
           <ReactQuill
             theme="snow"
             placeholder="Write something..."

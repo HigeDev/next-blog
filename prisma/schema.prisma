@@ -25,6 +25,7 @@ model User {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   posts           Post[]
+  projects        Project[]
 }
 
 model Post {
@@ -36,6 +37,57 @@ model Post {
   slug            String   @unique
   user            User     @relation(fields: [userId], references: [id])
   userId          Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+
+model Project {
+  id              Int      @id @default(autoincrement())
+  name            String   @unique
+  description     String
+  linkUrl         String   @default("https:/higesan.store")
+  user            User     @relation(fields: [userId], references: [id])
+  userId          Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  project_images  Project_Image[]
+  project_skill   Project_Skill?
+}
+
+model Project_Image {
+  id              Int      @id @default(autoincrement())
+  project         Project  @relation(fields: [projectId], references: [id])
+  projectId       Int
+  image           String   @default("DefaultImage.png")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Project_Skill {
+  id              Int      @id @default(autoincrement())
+  project         Project  @relation(fields: [projectId], references: [id])
+  projectId       Int      @unique
+  codeigniter     Boolean @default(false)
+  laravel         Boolean @default(false)
+  mysql           Boolean @default(false)
+  prisma          Boolean @default(false)
+  typescript      Boolean @default(false)
+  javascript      Boolean @default(false)
+  tailwind        Boolean @default(false)
+  bootstrap       Boolean @default(false)
+  api             Boolean @default(false)
+  nextjs          Boolean @default(false)
+  seo             Boolean @default(false)
+  flowbite        Boolean @default(false)
+  figma           Boolean @default(false)
+  matlab          Boolean @default(false)
+  arduino         Boolean @default(false)
+  rstudio         Boolean @default(false)
+  java            Boolean @default(false)
+  anroidstudio    Boolean @default(false)
+  vscode          Boolean @default(false)
+  git             Boolean @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
