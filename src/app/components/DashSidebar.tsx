@@ -10,9 +10,10 @@ import {
   HiUser,
   HiArrowSmRight,
   HiDocumentText,
-  HiOutlineUserGroup,
+  HiUserGroup,
   HiChartPie,
 } from "react-icons/hi";
+import { GrTask } from "react-icons/gr";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { SignOutButton } from "@clerk/nextjs";
@@ -72,12 +73,15 @@ export default function DashSidebar() {
             </Link>
           ) : null}
           {user?.publicMetadata?.isAdmin ? (
+            <Link href="/dashboard?tab=projects">
+              <SidebarItem active={tab === "projects"} icon={GrTask} as="div">
+                Projects
+              </SidebarItem>
+            </Link>
+          ) : null}
+          {user?.publicMetadata?.isAdmin ? (
             <Link href="/dashboard?tab=users">
-              <SidebarItem
-                active={tab === "users"}
-                icon={HiOutlineUserGroup}
-                as="div"
-              >
+              <SidebarItem active={tab === "users"} icon={HiUserGroup} as="div">
                 Users
               </SidebarItem>
             </Link>

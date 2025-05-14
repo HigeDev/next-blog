@@ -45,6 +45,7 @@ model Post {
 model Project {
   id              Int      @id @default(autoincrement())
   name            String   @unique
+  slug            String   @unique
   description     String
   linkUrl         String   @default("https:/higesan.store")
   user            User     @relation(fields: [userId], references: [id])
@@ -85,7 +86,7 @@ model Project_Skill {
   arduino         Boolean @default(false)
   rstudio         Boolean @default(false)
   java            Boolean @default(false)
-  anroidstudio    Boolean @default(false)
+  androidstudio   Boolean @default(false)
   vscode          Boolean @default(false)
   git             Boolean @default(false)
   createdAt       DateTime @default(now())

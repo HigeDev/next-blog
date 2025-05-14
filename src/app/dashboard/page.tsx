@@ -5,6 +5,7 @@ import DashSidebar from "../components/DashSidebar";
 import DashProfile from "../components/DashProfile";
 import { useSearchParams } from "next/navigation";
 import DashPosts from "../components/DashPosts";
+import DashProjects from "../components/DashProjects";
 import DashUsers from "../components/DashUsers";
 import DashboardComp from "../components/DashboardComp";
 export default function Dashboard() {
@@ -27,6 +28,7 @@ export default function Dashboard() {
       {tab === "profile" && <DashProfile />}
 
       {tab === "posts" && <DashPosts />}
+      {tab === "projects" && <DashProjects />}
 
       {tab === "users" && <DashUsers />}
       {tab === "dash" && <DashboardComp />}
