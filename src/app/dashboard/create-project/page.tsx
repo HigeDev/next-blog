@@ -4,15 +4,7 @@ import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useDropzone } from "react-dropzone";
-import {
-  Alert,
-  Button,
-  FileInput,
-  Select,
-  TextInput,
-  Label,
-  Checkbox,
-} from "flowbite-react";
+import { Alert, Button, TextInput, Label, Checkbox } from "flowbite-react";
 import {
   SiCodeigniter,
   SiLaravel,
@@ -28,9 +20,10 @@ import {
   SiAndroidstudio,
   SiGit,
   SiNextdotjs,
+  SiCisco,
 } from "react-icons/si";
 import { TbApi, TbSeo, TbBrandVscode } from "react-icons/tb";
-import { RiNextjsFill, RiJavaFill } from "react-icons/ri";
+import { RiJavaFill } from "react-icons/ri";
 
 type FormDataFields = {
   name: string;
@@ -56,6 +49,7 @@ type FormDataFields = {
   Git: boolean;
   Matlab: boolean;
   Flowbite: boolean;
+  Cisco: boolean;
 };
 export default function CreateProjectPage() {
   const { isSignedIn, user, isLoaded } = useUser();
@@ -88,6 +82,7 @@ export default function CreateProjectPage() {
     Git: false,
     Matlab: false,
     Flowbite: false,
+    Cisco: false,
   });
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -490,6 +485,22 @@ export default function CreateProjectPage() {
               <SiGit className="cursor-pointer text-4xl" />
               <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition transform bg-gray-700 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
                 Git
+              </span>
+            </Label>
+          </div>
+          <div className="flex items-center gap-3 relative group">
+            <Checkbox
+              id="Cisco"
+              className="w-6 h-6"
+              checked={formData.Cisco}
+              onChange={(e) =>
+                setFormData({ ...formData, Cisco: e.target.checked })
+              }
+            />
+            <Label htmlFor="Cisco" className="relative">
+              <SiCisco className="cursor-pointer text-4xl" />
+              <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition transform bg-gray-700 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
+                Cisco Packet Tracker
               </span>
             </Label>
           </div>

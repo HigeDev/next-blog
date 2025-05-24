@@ -23,9 +23,7 @@ export const POST = async (req: Request) => {
 
     const allProjects = await prisma.project.findMany({
       include: {
-        project_images: {
-          take: 1,
-        },
+        project_images: true,
         project_skill: true,
       },
       where: whereClause,

@@ -84,6 +84,7 @@ export async function POST(req: Request) {
           Git,
           Matlab,
           Flowbite,
+          Cisco,
         } = fields;
         console.log(fields);
 
@@ -155,6 +156,7 @@ export async function POST(req: Request) {
             androidstudio: AndroidStudio === "true",
             vscode: VSCode === "true",
             git: Git === "true",
+            cisco: Cisco === "true",
           },
         });
 

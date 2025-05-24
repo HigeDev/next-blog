@@ -89,6 +89,7 @@ model Project_Skill {
   androidstudio   Boolean @default(false)
   vscode          Boolean @default(false)
   git             Boolean @default(false)
+  cisco           Boolean @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
