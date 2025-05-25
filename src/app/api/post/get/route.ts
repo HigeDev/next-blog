@@ -1,15 +1,15 @@
 import prisma from "@/lib/db";
-import { Prisma } from "@prisma/client";
 
 export const POST = async (req: Request) => {
   try {
     const data = await req.json();
+    console.log(data);
 
     const startIndex = parseInt(data.startIndex) || 0;
     const limit = parseInt(data.limit) || 9;
     const sortDirection = data.order === "asc" ? "asc" : "desc";
 
-    const whereClause: Prisma.PostWhereInput = {};
+    const whereClause: any = {};
 
     if (data.userId) {
       whereClause.userId = Number(data.userId);
@@ -44,8 +44,10 @@ export const POST = async (req: Request) => {
       skip: startIndex,
       take: limit,
     });
+    // console.log(posts);
 
     const totalPosts = await prisma.post.count();
+
     const now = new Date();
     const oneMonthAgo = new Date(
       now.getFullYear(),
@@ -54,7 +56,9 @@ export const POST = async (req: Request) => {
     );
 
     const lastMonthPosts = await prisma.post.count({
-      where: { createdAt: { gte: oneMonthAgo } },
+      where: {
+        createdAt: { gte: oneMonthAgo },
+      },
     });
 
     return new Response(JSON.stringify({ posts, totalPosts, lastMonthPosts }), {

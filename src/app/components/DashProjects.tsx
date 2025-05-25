@@ -159,12 +159,12 @@ export default function DashProjects() {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Link
+                    {/* <Link
                       className="text-teal-500 hover:underline"
                       href={`/dashboard/update-project/${project.id}`}
-                    >
-                      <span>Edit</span>
-                    </Link>
+                    > */}
+                    <span>Edit</span>
+                    {/* </Link> */}
                   </TableCell>
                 </TableRow>
               ))}
