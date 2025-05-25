@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
 
 // Tipe untuk user
 interface UserType {
@@ -85,8 +86,10 @@ export default function DashUsers() {
                     {new Date(user.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <img
+                    <Image
                       src={user.profilePicture}
+                      width={40}
+                      height={40}
                       alt={user.username}
                       className="w-10 h-10 object-cover bg-gray-500 rounded-full"
                     />

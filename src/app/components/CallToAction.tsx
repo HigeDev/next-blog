@@ -1,4 +1,5 @@
 import { Button } from "flowbite-react";
+import Image from "next/image";
 export default function CallToAction() {
   return (
     <div className="flex flex-col sm:flex-row p-3 border border-teal-500 justify-center items-center rounded-tl-3xl rounded-br-3xl text-center">
@@ -18,7 +19,7 @@ export default function CallToAction() {
         </Button>
       </div>
       <div className="p-7 flex-1">
-        <img src="https://bairesdev.mo.cloudinary.net/blog/2023/08/What-Is-JavaScript-Used-For.jpg" />
+        <Image alt="adds" width={600} height={300} src="/cta.jpg" />
       </div>
     </div>
   );

@@ -1,7 +1,5 @@
 import CallToAction from "@/app/components/CallToAction";
-import RecentPosts from "@/app/components/RecentPost";
-import { Button } from "flowbite-react";
-import Link from "next/link";
+import Image from "next/image";
 
 export interface Project {
   id: number;
@@ -87,8 +85,10 @@ export default async function ProjectPage(props: {
           Crafted with skill and care to help our clients grow their business!
         </p>
       </div>
-      <img
+      <Image
         src={`/uploads/${project.project_images[0].image}`}
+        width={1200}
+        height={600}
         alt={project.name}
         className="mt-10 p-3 max-h-[600px] w-full object-cover"
       />

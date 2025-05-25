@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import Image from "next/image";
 
 interface Post {
   id: number;
@@ -127,8 +128,10 @@ export default function DashPosts() {
                   </TableCell>
                   <TableCell>
                     <Link href={`/post/${post.slug}`}>
-                      <img
+                      <Image
                         src={`/uploads/${post.image}`}
+                        width={80}
+                        height={40}
                         alt={post.title}
                         className="w-20 h-10 object-cover bg-gray-500"
                       />

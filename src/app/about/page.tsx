@@ -27,6 +27,8 @@ export default function About() {
           <div className="text-center mx-auto lg:col-span-5 col-span-12">
             <Image
               src="/ProfileHige.jpeg"
+              width={320}
+              height={320}
               alt="Flowbite dashboard"
               className="w-80 h-80 rounded-full border-4 border-white shadow-2xl object-cover mx-auto"
             />

@@ -9,6 +9,7 @@ import { MdDelete, MdFileUpload } from "react-icons/md";
 
 import "react-quill-new/dist/quill.snow.css";
 import "react-circular-progressbar/dist/styles.css";
+import Image from "next/image";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -195,12 +196,14 @@ export default function UpdatePostPage() {
           </div>
 
           {formData.image && (
-            <img
+            <Image
               src={
                 formData.image.startsWith("blob:")
                   ? formData.image
                   : `/uploads/${formData.image}`
               }
+              width={1280}
+              height={288}
               alt="Preview"
               className="w-full h-72 object-cover"
             />

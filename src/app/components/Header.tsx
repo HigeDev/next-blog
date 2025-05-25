@@ -16,6 +16,7 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 export default function Header() {
   const path = usePathname();
@@ -47,9 +48,11 @@ export default function Header() {
   return (
     <Navbar fluid rounded>
       <NavbarBrand href={process.env.NEXT_PUBLIC_URL}>
-        <img
-          src="/favicon.ico"
+        <Image
+          src="/Hige-Logo.png"
           className="mr-3 h-6 sm:h-9"
+          width={40}
+          height={40}
           alt="Flowbite React Logo"
         />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">

@@ -8,14 +8,11 @@ import {
   TableHead,
   TableHeadCell,
   TableRow,
-  Modal,
-  ModalBody,
-  ModalHeader,
 } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
+import Image from "next/image";
 
 interface Project {
   id: number;
@@ -34,10 +31,10 @@ export interface ProjectImage {
 export default function DashProjects() {
   const { user } = useUser();
   const [userProjects, setUserProjects] = useState<Project[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [projectIdToDelete, setProjectIdToDelete] = useState<number | null>(
-    null
-  );
+  // const [showModal, setShowModal] = useState(false);
+  // const [projectIdToDelete, setProjectIdToDelete] = useState<number | null>(
+  //   null
+  // );
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -133,8 +130,10 @@ export default function DashProjects() {
                   </TableCell>
                   <TableCell>
                     <Link href={`/project/${project.slug}`}>
-                      <img
+                      <Image
                         src={`/uploads/${project.project_images[0].image}`}
+                        width={80}
+                        height={40}
                         alt={project.name}
                         className="w-20 h-10 object-cover bg-gray-500"
                       />

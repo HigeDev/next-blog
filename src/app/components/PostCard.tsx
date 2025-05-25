@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 interface Post {
@@ -20,8 +21,10 @@ export default function PostCard({ post }: PostCardProps) {
   return (
     <div className="group relative w-full border border-teal-500 hover:border-2 h-[400px] overflow-hidden rounded-lg sm:w-[430px] transition-all">
       <Link href={`/post/${post.slug}`}>
-        <img
+        <Image
           src={`/uploads/${post.image}`}
+          width={1200}
+          height={260}
           alt="post cover"
           className="h-[260px] w-full object-cover group-hover:h-[200px] transition-all duration-300 z-20"
         />

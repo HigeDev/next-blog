@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import "react-quill-new/dist/quill.snow.css";
 import "react-circular-progressbar/dist/styles.css";
+import Image from "next/image";
 
 // Dynamic import for ReactQuill
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
@@ -19,7 +20,7 @@ type FormDataFields = {
 };
 
 export default function CreatePostPage() {
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { isSignedIn, user } = useUser();
   const router = useRouter();
 
   const [file, setFile] = useState<File | null>(null);
@@ -129,8 +130,10 @@ export default function CreatePostPage() {
           </div>
 
           {imageUrl && (
-            <img
+            <Image
               src={imageUrl}
+              width={1280}
+              height={288}
               alt="Preview"
               className="w-full h-72 object-cover"
             />

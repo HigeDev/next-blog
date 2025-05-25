@@ -1,6 +1,7 @@
 import CallToAction from "@/app/components/CallToAction";
 import RecentPosts from "@/app/components/RecentPost";
 import { Button } from "flowbite-react";
+import Image from "next/image";
 import Link from "next/link";
 
 interface Post {
@@ -70,8 +71,10 @@ export default async function PostPage(props: {
           {post.category}
         </Button>
       </Link>
-      <img
+      <Image
         src={`/uploads/${post.image}`}
+        width={1200}
+        height={600}
         alt={post.title}
         className="mt-10 p-3 max-h-[600px] w-full object-cover"
       />

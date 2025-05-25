@@ -23,6 +23,7 @@ import {
 import { TbApi, TbSeo, TbBrandVscode } from "react-icons/tb";
 import { RiJavaFill } from "react-icons/ri";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 
 export interface Project {
   id: number;
@@ -154,8 +155,10 @@ export default function ProjectComponent() {
               {isEven && (
                 <div className="text-center mx-auto lg:col-span-5 col-span-12 order-1 lg:order-none">
                   <Link href={`/project/show/${project.slug}`}>
-                    <img
+                    <Image
                       src={imgUrl}
+                      width={440}
+                      height={320}
                       alt={project.name}
                       className={`w-110 h-80 rounded-2xl border-4 border-white object-cover mx-auto 
                 transition duration-1000 ease-in-out transform 
@@ -339,7 +342,7 @@ export default function ProjectComponent() {
                   )}
                   {project.project_skill.matlab && (
                     <div className="group relative flex flex-col items-center">
-                      <img
+                      <Image
                         src={iconMatlab}
                         className="cursor-pointer text-4xl"
                         alt="Matlab icon"
@@ -353,7 +356,7 @@ export default function ProjectComponent() {
                   )}
                   {project.project_skill.flowbite && (
                     <div className="group relative flex flex-col items-center">
-                      <img
+                      <Image
                         src={iconFlowbite}
                         className="cursor-pointer text-4xl"
                         alt="Flowbite icon"
@@ -376,8 +379,10 @@ export default function ProjectComponent() {
               {!isEven && (
                 <div className="text-center mx-auto lg:col-span-5 col-span-12 order-1 lg:order-none">
                   <Link href={`/project/show/${project.slug}`}>
-                    <img
+                    <Image
                       src={imgUrl}
+                      width={440}
+                      height={320}
                       alt={project.name}
                       className={`w-110 h-80 rounded-2xl border-4 border-white object-cover mx-auto 
                 transition duration-1000 ease-in-out transform 

@@ -24,6 +24,7 @@ import {
 } from "react-icons/si";
 import { TbApi, TbSeo, TbBrandVscode } from "react-icons/tb";
 import { RiJavaFill } from "react-icons/ri";
+import Image from "next/image";
 
 type FormDataFields = {
   name: string;
@@ -52,7 +53,7 @@ type FormDataFields = {
   Cisco: boolean;
 };
 export default function CreateProjectPage() {
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { user } = useUser();
   const router = useRouter();
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -150,8 +151,7 @@ export default function CreateProjectPage() {
         setPublishError(data.message || "Failed to publish.");
         return;
       }
-
-      // router.push(`/dashboard}`);
+      router.push(`/project/${data.slug}`);
     } catch (error) {
       setPublishError("Something went wrong.");
     } finally {
@@ -514,7 +514,7 @@ export default function CreateProjectPage() {
               }
             />
             <Label htmlFor="Matlab" className="relative">
-              <img
+              <Image
                 src={iconMatlab}
                 className="cursor-pointer text-4xl"
                 alt="Matlab icon"
@@ -536,7 +536,7 @@ export default function CreateProjectPage() {
               }
             />
             <Label htmlFor="Flowbite" className="relative">
-              <img
+              <Image
                 src={iconFlowbite}
                 className="cursor-pointer text-4xl"
                 alt="Flowbite icon"
@@ -569,8 +569,10 @@ export default function CreateProjectPage() {
             <div className="grid grid-cols-3 gap-4 mt-4">
               {previews.map((src, index) => (
                 <div key={index} className="relative group">
-                  <img
+                  <Image
                     src={src}
+                    width={1280}
+                    height={288}
                     alt={`preview-${index}`}
                     className="w-full h-32 object-cover rounded border-2"
                   />
