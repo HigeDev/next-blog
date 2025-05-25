@@ -1,0 +1,47 @@
+services:
+  nextjs:
+    build: .
+    container_name: nextjs_app
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - mysql
+    expose:
+      - "3000"
+    networks:
+      - web
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - web
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - nextjs
+    networks:
+      - web
+
+volumes:
+  mysql_data:
+
+networks:
+  web:
+    driver: bridge
