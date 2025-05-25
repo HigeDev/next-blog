@@ -29,14 +29,22 @@ export async function PUT(req: Request) {
     const headers = Object.fromEntries(req.headers.entries());
     const bb = busboy({ headers });
     const stream = requestToNodeStream(req);
+    type PostUpdateFields = {
+      postId?: string;
+      title?: string;
+      content?: string;
+      category?: string;
+      userId?: string;
+      image?: string;
+    };
 
-    const fields: Record<string, any> = {};
+    const fields: Partial<PostUpdateFields> = {};
     let fileBuffer: Buffer | null = null;
     let fileInfo: { filename: string; mimeType: string } | null = null;
 
     return await new Promise<Response>((resolve, reject) => {
       bb.on("field", (name, val) => {
-        fields[name] = val;
+        fields[name as keyof PostUpdateFields] = val;
       });
 
       bb.on("file", (name, file, info) => {

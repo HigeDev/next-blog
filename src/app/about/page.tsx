@@ -1,4 +1,5 @@
 import { Button } from "flowbite-react";
+import Image from "next/image";
 import {
   BsFacebook,
   BsInstagram,
@@ -24,7 +25,7 @@ export default function About() {
         <div className="grid gap-10 lg:grid-cols-12 items-start">
           {/* Image Content - 4 columns on lg */}
           <div className="text-center mx-auto lg:col-span-5 col-span-12">
-            <img
+            <Image
               src="/ProfileHige.jpeg"
               alt="Flowbite dashboard"
               className="w-80 h-80 rounded-full border-4 border-white shadow-2xl object-cover mx-auto"

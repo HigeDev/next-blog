@@ -40,7 +40,7 @@ export async function DELETE(req: Request) {
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    const { postId, image } = body;
+    const { postId } = body;
     console.log(body);
 
     const updatedPost = await prisma.post.update({

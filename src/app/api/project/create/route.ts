@@ -125,7 +125,7 @@ export async function POST(req: Request) {
             newFileName
           );
           await fs.writeFile(filePath, file.buffer);
-          const tb_image = await prisma.project_Image.create({
+          await prisma.project_Image.create({
             data: {
               projectId: post.id,
               image: newFileName,
@@ -133,7 +133,7 @@ export async function POST(req: Request) {
           });
         }
 
-        const tb_skill = await prisma.project_Skill.create({
+        await prisma.project_Skill.create({
           data: {
             projectId: post.id,
             codeigniter: Codeigniter === "true",

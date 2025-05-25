@@ -56,7 +56,19 @@ export async function POST(req: Request) {
           fileBuffer = Buffer.concat(chunks);
         });
       });
+      type PostFields = {
+        title?: string;
+        content?: string;
+        category?: string;
+        userId?: string;
+        [key: string]: string | undefined;
+      };
 
+      const fields: PostFields = {}; // <- PostFields digunakan di sini
+
+      bb.on("field", (name, val) => {
+        fields[name as keyof PostFields] = val;
+      });
       bb.on("finish", async () => {
         const { title, content, category, userId } = fields;
 
