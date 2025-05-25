@@ -1,8 +1,16 @@
 "use client";
 
+import React, {
+  Suspense,
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button, Select, TextInput } from "flowbite-react";
-import { useEffect, useState, ChangeEvent, FormEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import PostCard from "../components/PostCard";
 
 interface Post {
@@ -23,33 +31,136 @@ interface SidebarData {
   category: string;
 }
 
+// Utility untuk wrap promise jadi suspense resource
+function wrapPromise<T>(promise: Promise<T>) {
+  let status = "pending";
+  let result: T;
+  let suspender = promise.then(
+    (res) => {
+      status = "success";
+      result = res;
+    },
+    (err) => {
+      status = "error";
+      result = err;
+    }
+  );
+  return {
+    read() {
+      if (status === "pending") throw suspender;
+      if (status === "error") throw result;
+      return result;
+    },
+  };
+}
+
+function fetchPosts(params: {
+  searchTerm: string;
+  sort: string;
+  category: string;
+  startIndex?: number;
+}) {
+  return wrapPromise(
+    fetch("/api/post/get", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        limit: 9,
+        order: params.sort,
+        category: params.category,
+        searchTerm: params.searchTerm,
+        startIndex: params.startIndex || 0,
+      }),
+    }).then(async (res) => {
+      if (!res.ok) throw new Error("Failed to fetch posts");
+      return res.json();
+    })
+  );
+}
+
+function Posts({
+  resource,
+  onShowMore,
+  showMore,
+}: {
+  resource: { read: () => { posts: Post[] } };
+  onShowMore: () => void;
+  showMore: boolean;
+}) {
+  const data = resource.read();
+
+  return (
+    <>
+      {data.posts.length === 0 && (
+        <p className="text-xl text-gray-500">No posts found.</p>
+      )}
+      <div className="flex flex-wrap gap-4 justify-center">
+        {data.posts.map((post) => (
+          <PostCard key={post.id} post={post} />
+        ))}
+      </div>
+      {showMore && (
+        <button
+          onClick={onShowMore}
+          className="text-teal-500 text-lg hover:underline p-7 w-full"
+        >
+          Show More
+        </button>
+      )}
+    </>
+  );
+}
+
+// Komponen ini hanya untuk membaca searchParams dan mengatur ulang state
+function SearchParamsReader({
+  onParamsRead,
+}: {
+  onParamsRead: (params: SidebarData) => void;
+}) {
+  const searchParams = useSearchParams();
+
+  const searchTermFromUrl = searchParams.get("searchTerm") || "";
+  const sortFromUrl = searchParams.get("sort") || "desc";
+  const categoryFromUrl = searchParams.get("category") || "";
+
+  useEffect(() => {
+    onParamsRead({
+      searchTerm: searchTermFromUrl,
+      sort: sortFromUrl,
+      category: categoryFromUrl,
+    });
+  }, [searchTermFromUrl, sortFromUrl, categoryFromUrl, onParamsRead]);
+
+  return null;
+}
+
 export default function Search() {
+  const router = useRouter();
+
   const [sidebarData, setSidebarData] = useState<SidebarData>({
     searchTerm: "",
     sort: "desc",
     category: "",
   });
 
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(searchParams.toString());
-    const searchTermFromUrl = urlParams.get("searchTerm") || "";
-    const sortFromUrl = urlParams.get("sort") || "desc";
-    const categoryFromUrl = urlParams.get("category") || "";
+  const handleParamsRead = useCallback((params: SidebarData) => {
+    setSidebarData(params);
+  }, []);
 
-    setSidebarData({
-      searchTerm: searchTermFromUrl,
-      sort: sortFromUrl,
-      category: categoryFromUrl,
-    });
+  const resource = useMemo(() => {
+    setShowMore(false);
+    setAllPosts([]);
+    return fetchPosts(sidebarData);
+  }, [sidebarData]);
 
-    const fetchPosts = async () => {
-      setLoading(true);
+  async function handleShowMore() {
+    const startIndex = allPosts.length;
+    try {
       const res = await fetch("/api/post/get", {
         method: "POST",
         headers: {
@@ -57,22 +168,30 @@ export default function Search() {
         },
         body: JSON.stringify({
           limit: 9,
-          order: sortFromUrl,
-          category: categoryFromUrl,
-          searchTerm: searchTermFromUrl,
+          order: sidebarData.sort,
+          category: sidebarData.category,
+          searchTerm: sidebarData.searchTerm,
+          startIndex,
         }),
       });
-      if (!res.ok) {
-        setLoading(false);
-        return;
-      }
+      if (!res.ok) throw new Error("Failed to fetch more posts");
       const data = await res.json();
-      setPosts(data.posts);
-      setLoading(false);
+      setAllPosts((prev) => [...prev, ...data.posts]);
       setShowMore(data.posts.length === 9);
-    };
-    fetchPosts();
-  }, [searchParams]);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    try {
+      const data = resource.read();
+      setAllPosts(data.posts);
+      setShowMore(data.posts.length === 9);
+    } catch {
+      // Suspense akan handle loading/error
+    }
+  }, [resource]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
@@ -86,42 +205,18 @@ export default function Search() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const urlParams = new URLSearchParams(searchParams.toString());
+    const urlParams = new URLSearchParams();
     urlParams.set("searchTerm", sidebarData.searchTerm);
     urlParams.set("sort", sidebarData.sort);
     urlParams.set("category", sidebarData.category);
-    const searchQuery = urlParams.toString();
-    router.push(`/search?${searchQuery}`);
-  };
-
-  const handleShowMore = async () => {
-    const numberOfPosts = posts.length;
-    const startIndex = numberOfPosts;
-    const urlParams = new URLSearchParams(searchParams.toString());
-    urlParams.set("startIndex", startIndex.toString());
-    const res = await fetch("/api/post/get", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        limit: 9,
-        order: sidebarData.sort,
-        category: sidebarData.category,
-        searchTerm: sidebarData.searchTerm,
-        startIndex,
-      }),
-    });
-    if (!res.ok) {
-      return;
-    }
-    const data = await res.json();
-    setPosts((prev) => [...prev, ...data.posts]);
-    setShowMore(data.posts.length === 9);
+    router.push(`/search?${urlParams.toString()}`);
   };
 
   return (
     <div className="flex flex-col md:flex-row">
+      <Suspense fallback={null}>
+        <SearchParamsReader onParamsRead={handleParamsRead} />
+      </Suspense>
       <div className="p-7 border-b md:border-r md:min-h-screen border-gray-500">
         <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
           <div className="flex items-center gap-2">
@@ -165,21 +260,16 @@ export default function Search() {
         <h1 className="text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5">
           Posts results:
         </h1>
-        <div className="p-7 flex flex-wrap gap-4 justify-center">
-          {!loading && posts.length === 0 && (
-            <p className="text-xl text-gray-500">No posts found.</p>
-          )}
-          {loading && <p className="text-xl text-gray-500">Loading...</p>}
-          {!loading &&
-            posts.map((post) => <PostCard key={post.id} post={post} />)}
-          {showMore && (
-            <button
-              onClick={handleShowMore}
-              className="text-teal-500 text-lg hover:underline p-7 w-full"
-            >
-              Show More
-            </button>
-          )}
+        <div className="p-7">
+          <Suspense
+            fallback={<p className="text-xl text-gray-500">Loading posts...</p>}
+          >
+            <Posts
+              resource={resource}
+              onShowMore={handleShowMore}
+              showMore={showMore}
+            />
+          </Suspense>
         </div>
       </div>
     </div>

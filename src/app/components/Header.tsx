@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Navbar,
   NavbarBrand,
@@ -14,39 +15,57 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+
+// Komponen untuk membaca searchParams dan sync ke state
+function SearchParamsReader({
+  onParamsRead,
+}: {
+  onParamsRead: (val: string) => void;
+}) {
+  const searchParams = useSearchParams();
+  const searchTermFromUrl = searchParams.get("searchTerm") || "";
+
+  useEffect(() => {
+    onParamsRead(searchTermFromUrl);
+  }, [searchTermFromUrl, onParamsRead]);
+
+  return null;
+}
 
 export default function Header() {
   const path = usePathname();
   const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
-  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const handleParamsRead = useCallback((val: string) => {
+    setSearchTerm(val);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const urlParams = new URLSearchParams(searchParams);
-    urlParams.set("searchTerm", searchTerm);
+    const urlParams = new URLSearchParams();
+    if (searchTerm) urlParams.set("searchTerm", searchTerm);
     const searchQuery = urlParams.toString();
     router.push(`/search?${searchQuery}`);
   };
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(searchParams);
-    const searchTermFromUrl = urlParams.get("searchTerm");
-    if (searchTermFromUrl) {
-      setSearchTerm(searchTermFromUrl);
-    }
     setIsMounted(true);
-  }, [searchParams]);
-  if (!isMounted) {
-    return null; // Hindari render sampai client-side
-  }
+  }, []);
+
+  if (!isMounted) return null;
+
   return (
     <Navbar fluid rounded>
+      <Suspense fallback={null}>
+        <SearchParamsReader onParamsRead={handleParamsRead} />
+      </Suspense>
+
       <NavbarBrand href={process.env.NEXT_PUBLIC_URL}>
         <Image
           src="/Hige-Logo.png"
@@ -59,6 +78,7 @@ export default function Header() {
           Flowbite React
         </span>
       </NavbarBrand>
+
       <SignedIn>
         <form onSubmit={handleSubmit}>
           <TextInput
@@ -74,6 +94,7 @@ export default function Header() {
           <AiOutlineSearch />
         </Button>
       </SignedIn>
+
       <div className="flex md:order-2">
         <button
           onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -90,6 +111,7 @@ export default function Header() {
         <SignedIn>
           <UserButton userProfileUrl="/dashboard?tab=profile" />
         </SignedIn>
+
         <SignedOut>
           <Link href="/sign-in">
             <Button color="alternative">
@@ -103,6 +125,7 @@ export default function Header() {
           <NavbarToggle />
         </SignedIn>
       </div>
+
       <SignedIn>
         <NavbarCollapse>
           <NavbarLink href="/" active={path === "/"}>

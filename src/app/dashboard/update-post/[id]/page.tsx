@@ -5,7 +5,7 @@ import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, usePathname } from "next/navigation";
-import { MdDelete, MdFileUpload } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 import "react-quill-new/dist/quill.snow.css";
 import "react-circular-progressbar/dist/styles.css";

@@ -1,35 +1,48 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense, useCallback } from "react";
 import DashSidebar from "../components/DashSidebar";
 import DashProfile from "../components/DashProfile";
-import { useSearchParams } from "next/navigation";
 import DashPosts from "../components/DashPosts";
 import DashProjects from "../components/DashProjects";
 import DashUsers from "../components/DashUsers";
 import DashboardComp from "../components/DashboardComp";
-export default function Dashboard() {
+import { useSearchParams } from "next/navigation";
+
+// Komponen kecil untuk ambil nilai tab dari searchParams
+function TabReader({ onTabChange }: { onTabChange: (tab: string) => void }) {
   const searchParams = useSearchParams();
-  const [tab, setTab] = useState("");
+  const tabFromUrl = searchParams.get("tab") || "";
+
   useEffect(() => {
-    const urlParams = new URLSearchParams(searchParams);
-    const tabFromUrl = urlParams.get("tab");
-    if (tabFromUrl) {
-      setTab(tabFromUrl);
-    }
-  }, [searchParams]);
+    onTabChange(tabFromUrl);
+  }, [tabFromUrl, onTabChange]);
+
+  return null;
+}
+
+export default function Dashboard() {
+  const [tab, setTab] = useState("");
+
+  const handleTabChange = useCallback((newTab: string) => {
+    setTab(newTab);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
+      <Suspense fallback={null}>
+        <TabReader onTabChange={handleTabChange} />
+      </Suspense>
+
       <div className="md:w-56">
         {/* Sidebar */}
         <DashSidebar />
       </div>
-      {/* profile... */}
-      {tab === "profile" && <DashProfile />}
 
+      {/* Konten berdasarkan tab */}
+      {tab === "profile" && <DashProfile />}
       {tab === "posts" && <DashPosts />}
       {tab === "projects" && <DashProjects />}
-
       {tab === "users" && <DashUsers />}
       {tab === "dash" && <DashboardComp />}
     </div>

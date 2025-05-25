@@ -54,7 +54,6 @@ export default async function ProjectPage(props: {
     const result = await fetch(`${process.env.URL}/api/project/get`, {
       method: "POST",
       body: JSON.stringify({ slug }),
-      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },

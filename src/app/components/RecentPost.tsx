@@ -23,7 +23,6 @@ export default async function RecentPosts({ limit }: RecentPostsProps) {
     const result = await fetch(`${process.env.URL}/api/post/get`, {
       method: "POST",
       body: JSON.stringify({ limit: limit, order: "desc" }),
-      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
