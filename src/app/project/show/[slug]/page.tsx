@@ -49,12 +49,17 @@ export default async function ProjectPage(props: {
 }) {
   const { params } = props;
   const { slug } = await params; // <<< AWAIT di sini
+  const isServer = typeof window === "undefined";
+
+  const baseURL = isServer
+    ? process.env.API_BASE_URL
+    : process.env.NEXT_PUBLIC_API_BASE_URL;
 
   let project: Project | null = null;
 
   try {
     const result = await axios.post(
-      `${process.env.URL}/api/project/get`,
+      `${baseURL}/api/project/get`,
       { slug },
       {
         headers: {

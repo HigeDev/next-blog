@@ -16,12 +16,16 @@ interface Post {
 interface RecentPostsProps {
   limit: number;
 }
+const isServer = typeof window === "undefined";
 
+const baseURL = isServer
+  ? process.env.API_BASE_URL
+  : process.env.NEXT_PUBLIC_API_BASE_URL;
 export default async function RecentPosts({ limit }: RecentPostsProps) {
   let posts: Post[] | null = null;
 
   try {
-    const result = await axios.post(`${process.env.URL}/api/post/get`, {
+    const result = await axios.post(`${baseURL}/api/post/get`, {
       limit: limit,
       order: "desc",
     });

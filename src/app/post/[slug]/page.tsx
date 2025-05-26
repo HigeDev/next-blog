@@ -16,7 +16,11 @@ interface Post {
   updatedAt: string;
   userId: number;
 }
+const isServer = typeof window === "undefined";
 
+const baseURL = isServer
+  ? process.env.API_BASE_URL
+  : process.env.NEXT_PUBLIC_API_BASE_URL;
 export default async function PostPage(props: {
   params: Promise<{ slug: string }>;
 }) {
@@ -27,7 +31,7 @@ export default async function PostPage(props: {
 
   try {
     const result = await axios.post(
-      `${process.env.URL}/api/post/get`,
+      `${baseURL}/api/post/get`,
       { slug },
       { headers: { "Content-Type": "application/json" } }
     );
