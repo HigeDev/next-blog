@@ -62,22 +62,18 @@ function fetchPosts(params: {
   startIndex?: number;
 }) {
   return wrapPromise(
-    fetch("/api/post/get", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    axios
+      .post("/api/post/get", {
         limit: 9,
         order: params.sort,
         category: params.category,
         searchTerm: params.searchTerm,
         startIndex: params.startIndex || 0,
-      }),
-    }).then(async (res) => {
-      if (!res.ok) throw new Error("Failed to fetch posts");
-      return res.json();
-    })
+      })
+      .then((res) => res.data)
+      .catch((err) => {
+        throw new Error("Failed to fetch posts");
+      })
   );
 }
 
