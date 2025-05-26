@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, usePathname } from "next/navigation";
 import { MdDelete } from "react-icons/md";
+import axios from "axios";
 
 import "react-quill-new/dist/quill.snow.css";
 import "react-circular-progressbar/dist/styles.css";
@@ -40,14 +41,10 @@ export default function UpdatePostPage() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const result = await fetch("/api/post/get", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ postId }),
-        });
-        const data = await result.json();
+        const res = await axios.post("/api/post/get", { postId });
+        const data = res.data;
         console.log(data);
-        if (result.ok && data.posts?.[0]) {
+        if (data.posts?.[0]) {
           setFormData(data.posts[0]);
         }
       } catch (err) {
@@ -64,32 +61,34 @@ export default function UpdatePostPage() {
     const url = URL.createObjectURL(file);
     setFormData({ ...formData, image: url });
   };
+
   const handleRemoveImage = async () => {
     try {
-      const res = await fetch("/api/post/image/remove", {
-        method: "DELETE",
+      // DELETE request to remove image
+      const resDelete = await axios.delete("/api/post/image/remove", {
+        data: { fileName: formData.image, postId: postId },
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName: formData.image, postId: postId }),
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        setFormData((prev) => ({ ...prev, image: data.url }));
+      if (resDelete.status === 200) {
+        const dataDelete = resDelete.data;
+        setFormData((prev) => ({ ...prev, image: dataDelete.url }));
 
         try {
-          const res = await fetch("/api/post/image/remove", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
+          // PUT request to update after removal
+          const resPut = await axios.put(
+            "/api/post/image/remove",
+            {
               fileName: formData.image,
               postId: postId,
-            }),
-          });
+            },
+            { headers: { "Content-Type": "application/json" } }
+          );
 
-          const data = await res.json();
+          const dataPut = resPut.data;
 
-          if (!res.ok) {
-            setPublishError(data.message || "Error saat mem-publish");
+          if (resPut.status !== 200) {
+            setPublishError(dataPut.message || "Error saat mem-publish");
             return;
           }
           setPublishError(null);
@@ -115,7 +114,6 @@ export default function UpdatePostPage() {
       return;
     }
 
-    // Hanya tambahkan file jika memang dipilih
     if (file) {
       formDataToSend.append("file", file);
     }
@@ -123,25 +121,24 @@ export default function UpdatePostPage() {
     formDataToSend.append("postId", String(postId));
 
     for (const key in formData) {
-      const value = formData[key as keyof FormDataFields];
+      const value = formData[key as keyof typeof formData];
       formDataToSend.append(key, value);
     }
 
     try {
       setIsSubmitting(true);
-      const res = await fetch("/api/post/update", {
-        method: "PUT",
-        body: formDataToSend,
+      const res = await axios.put("/api/post/update", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const data = await res.json();
-      if (!res.ok) {
+      const data = res.data;
+      if (res.status !== 200) {
         setPublishError(data.message || "Failed to update.");
         return;
       }
 
       router.push(`/post/${data.slug}`);
-    } catch (error) {
+    } catch (error: any) {
       setPublishError("Something went wrong.");
     } finally {
       setIsSubmitting(false);

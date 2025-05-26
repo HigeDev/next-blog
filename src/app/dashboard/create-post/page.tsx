@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import "react-quill-new/dist/quill.snow.css";
 import "react-circular-progressbar/dist/styles.css";
 import Image from "next/image";
+import axios from "axios";
 
 // Dynamic import for ReactQuill
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
@@ -58,20 +59,19 @@ export default function CreatePostPage() {
 
     try {
       setIsSubmitting(true);
-      const res = await fetch("/api/post/create", {
-        method: "POST",
-        body: formDataToSend,
+
+      const res = await axios.post("/api/post/create", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        setPublishError(data.message || "Failed to publish.");
-        return;
-      }
+      const data = res.data;
 
       router.push(`/post/${data.slug}`);
-    } catch (error) {
-      setPublishError("Something went wrong.");
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Something went wrong.";
+      setPublishError(message);
     } finally {
       setIsSubmitting(false);
     }

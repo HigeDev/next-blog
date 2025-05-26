@@ -24,6 +24,7 @@ import { TbApi, TbSeo, TbBrandVscode } from "react-icons/tb";
 import { RiJavaFill } from "react-icons/ri";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import axios from "axios";
 
 export interface Project {
   id: number;
@@ -78,21 +79,14 @@ export default function ProjectComponent() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/project/get", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ limit: 9, order: "asc" }),
-        });
-
-        const data = await res.json();
+        const res = await axios.post(
+          "/api/project/get",
+          { limit: 9, order: "asc" },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        const data = res.data;
         console.log(data);
-        if (res.ok) {
-          setProjects(data.allProjects);
-        } else {
-          console.error("Failed to fetch:", data);
-        }
+        setProjects(data.allProjects);
       } catch (error: any) {
         console.error(error.message);
       }

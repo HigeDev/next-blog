@@ -1,4 +1,5 @@
 import PostCard from "./PostCard";
+import axios from "axios";
 
 interface Post {
   id: number;
@@ -20,14 +21,12 @@ export default async function RecentPosts({ limit }: RecentPostsProps) {
   let posts: Post[] | null = null;
 
   try {
-    const result = await fetch(`${process.env.URL}/api/post/get`, {
-      method: "POST",
-      body: JSON.stringify({ limit: limit, order: "desc" }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const result = await axios.post(`${process.env.URL}/api/post/get`, {
+      limit: limit,
+      order: "desc",
     });
-    const data = await result.json();
+
+    const data = result.data;
     posts = data.posts;
   } catch (error) {
     console.log("Error getting posts:", error);

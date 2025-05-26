@@ -3,6 +3,7 @@ import RecentPosts from "@/app/components/RecentPost";
 import { Button } from "flowbite-react";
 import Image from "next/image";
 import Link from "next/link";
+import axios from "axios";
 
 interface Post {
   id: number;
@@ -23,16 +24,15 @@ export default async function PostPage(props: {
   const { slug } = await params; // <<< AWAIT di sini
 
   let post: Post | null = null;
+
   try {
-    const result = await fetch(`${process.env.URL}/api/post/get`, {
-      method: "POST",
-      body: JSON.stringify({ slug }),
-      cache: "no-store",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await result.json();
+    const result = await axios.post(
+      `${process.env.URL}/api/post/get`,
+      { slug },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    const data = result.data;
     post = data.posts[0];
   } catch (error) {
     post = {

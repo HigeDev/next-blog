@@ -1,5 +1,6 @@
 import CallToAction from "@/app/components/CallToAction";
 import Image from "next/image";
+import axios from "axios";
 
 export interface Project {
   id: number;
@@ -50,15 +51,19 @@ export default async function ProjectPage(props: {
   const { slug } = await params; // <<< AWAIT di sini
 
   let project: Project | null = null;
+
   try {
-    const result = await fetch(`${process.env.URL}/api/project/get`, {
-      method: "POST",
-      body: JSON.stringify({ slug }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await result.json();
+    const result = await axios.post(
+      `${process.env.URL}/api/project/get`,
+      { slug },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = result.data;
     project = data.allProjects[0];
   } catch (error: any) {
     console.error(error.message);

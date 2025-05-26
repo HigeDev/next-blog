@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
+import axios from "axios";
 
 interface Project {
   id: number;
@@ -39,23 +40,16 @@ export default function DashProjects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await fetch("/api/project/get", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user?.publicMetadata?.userId,
-          }),
+        const res = await axios.post("/api/project/get", {
+          userId: user?.publicMetadata?.userId,
         });
 
-        const data = await res.json();
-        if (res.ok) {
-          setUserProjects(data.allProjects);
-        }
+        const data = res.data;
+
+        setUserProjects(data.allProjects);
         console.log(data);
       } catch (error: any) {
-        console.error(error.message);
+        console.error(error.response?.data?.message || error.message);
       }
     };
 

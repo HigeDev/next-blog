@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import axios from "axios";
 
 // Tipe untuk user
 interface UserType {
@@ -30,22 +31,15 @@ export default function DashUsers() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch("/api/user/get", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user?.publicMetadata?.userId,
-          }),
+        const res = await axios.post("/api/user/get", {
+          userId: user?.publicMetadata?.userId,
         });
 
-        const data = await res.json();
-        if (res.ok) {
-          setUsers(data.users);
-        }
-      } catch (err) {
-        console.log(err);
+        const data = res.data;
+
+        setUsers(data.users);
+      } catch (err: any) {
+        console.log(err.response?.data?.message || err.message);
       }
     };
 

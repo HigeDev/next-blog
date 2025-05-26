@@ -3,18 +3,6 @@ import CallToAction from "./components/CallToAction";
 import RecentPosts from "./components/RecentPost";
 
 export default async function Home() {
-  let posts = null;
-  try {
-    const result = await fetch(process.env.URL + "/api/post/get", {
-      method: "POST",
-      body: JSON.stringify({ limit: 9, order: "desc" }),
-      cache: "no-store",
-    });
-    const data = await result.json();
-    posts = data.posts;
-  } catch (error) {
-    console.log("Error getting post:", error);
-  }
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto ">

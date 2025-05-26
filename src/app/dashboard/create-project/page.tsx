@@ -25,6 +25,7 @@ import {
 import { TbApi, TbSeo, TbBrandVscode } from "react-icons/tb";
 import { RiJavaFill } from "react-icons/ri";
 import Image from "next/image";
+import axios from "axios";
 
 type FormDataFields = {
   name: string;
@@ -139,25 +140,27 @@ export default function CreateProjectPage() {
       const value = formData[key as keyof FormDataFields];
       formDataToSend.append(key, String(value));
     }
+
     try {
       setIsSubmitting(true);
-      const res = await fetch("/api/project/create", {
-        method: "POST",
-        body: formDataToSend,
+
+      const res = await axios.post("/api/project/create", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        setPublishError(data.message || "Failed to publish.");
-        return;
-      }
+      const data = res.data;
+
       router.push(`/project/${data.slug}`);
-    } catch (error) {
-      setPublishError("Something went wrong.");
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Something went wrong.";
+      setPublishError(message);
     } finally {
       setIsSubmitting(false);
     }
   };
+
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Upload Filament Images</h1>

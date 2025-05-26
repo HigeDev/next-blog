@@ -17,6 +17,7 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import Image from "next/image";
+import axios from "axios";
 
 interface Post {
   id: number;
@@ -37,23 +38,16 @@ export default function DashPosts() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch("/api/post/get", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user?.publicMetadata?.userId,
-          }),
+        const res = await axios.post("/api/post/get", {
+          userId: user?.publicMetadata?.userId,
         });
 
-        const data = await res.json();
-        if (res.ok) {
-          setUserPosts(data.posts);
-        }
+        const data = res.data;
+
+        setUserPosts(data.posts);
         console.log(data);
       } catch (error: any) {
-        console.error(error.message);
+        console.error(error.response?.data?.message || error.message);
       }
     };
 

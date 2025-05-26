@@ -18,6 +18,7 @@ import {
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
+import axios from "axios";
 
 // --- Types ---
 interface UserType {
@@ -45,41 +46,32 @@ export default function DashboardComp() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch("/api/user/get", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ limit: 5 }),
+        const res = await axios.post("/api/user/get", {
+          limit: 5,
         });
-        const data = await res.json();
-        if (res.ok) {
-          setUsers(data.users);
-          setTotalUsers(data.totalUsers);
-          setLastMonthUsers(data.lastMonthUsers);
-        }
+
+        const data = res.data;
+
+        setUsers(data.users);
+        setTotalUsers(data.totalUsers);
+        setLastMonthUsers(data.lastMonthUsers);
       } catch (error: any) {
-        console.log(error.message);
+        console.log(error.response?.data?.message || error.message);
       }
     };
-
     const fetchPosts = async () => {
       try {
-        const res = await fetch("/api/post/get", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ limit: 5 }),
+        const res = await axios.post("/api/post/get", {
+          limit: 5,
         });
-        const data = await res.json();
-        if (res.ok) {
-          setPosts(data.posts);
-          setTotalPosts(data.totalPosts);
-          setLastMonthPosts(data.lastMonthPosts);
-        }
+
+        const data = res.data;
+
+        setPosts(data.posts);
+        setTotalPosts(data.totalPosts);
+        setLastMonthPosts(data.lastMonthPosts);
       } catch (error: any) {
-        console.log(error.message);
+        console.log(error.response?.data?.message || error.message);
       }
     };
 

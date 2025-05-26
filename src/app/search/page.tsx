@@ -12,6 +12,7 @@ import React, {
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button, Select, TextInput } from "flowbite-react";
 import PostCard from "../components/PostCard";
+import axios from "axios";
 
 interface Post {
   id: number;
@@ -160,22 +161,18 @@ export default function Search() {
 
   async function handleShowMore() {
     const startIndex = allPosts.length;
+
     try {
-      const res = await fetch("/api/post/get", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          limit: 9,
-          order: sidebarData.sort,
-          category: sidebarData.category,
-          searchTerm: sidebarData.searchTerm,
-          startIndex,
-        }),
+      const res = await axios.post("/api/post/get", {
+        limit: 9,
+        order: sidebarData.sort,
+        category: sidebarData.category,
+        searchTerm: sidebarData.searchTerm,
+        startIndex,
       });
-      if (!res.ok) throw new Error("Failed to fetch more posts");
-      const data = await res.json();
+
+      const data = res.data;
+
       setAllPosts((prev) => [...prev, ...data.posts]);
       setShowMore(data.posts.length === 9);
     } catch (e) {
