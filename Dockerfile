@@ -3,14 +3,14 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy only package files and install all dependencies
+# Copy only package files
 COPY package*.json ./
 RUN npm install
 
-# Copy app source code
+# Copy all source code
 COPY . .
 
-# Generate Prisma client and build Next.js
+# Generate Prisma client & Build Next.js
 RUN npx prisma generate
 RUN npm run build
 
@@ -19,16 +19,18 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy only necessary files
+# Install only production dependencies
 COPY package*.json ./
-RUN npm install --omit=dev --no-cache
+RUN npm install --omit=dev
 
-COPY --from=builder /app/.next ./.next
+# Copy only necessary files for standalone Next.js
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-# jika kamu pakai schema di runtime
+COPY --from=builder /app/next.config.ts ./
+
+# If needed at runtime:
 # COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/next.config.js ./
 
 EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
