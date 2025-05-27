@@ -3,12 +3,14 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies
+# Copy only package files and install all dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy source and build
+# Copy app source code
 COPY . .
+
+# Generate Prisma client and build Next.js
 RUN npx prisma generate
 RUN npm run build
 
@@ -17,11 +19,15 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy only the necessary files from the builder stage
-COPY --from=builder /app/package*.json ./
+# Copy only necessary files
+COPY package*.json ./
+RUN npm install --omit=dev --no-cache
+
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/node_modules ./node_modules
+# jika kamu pakai schema di runtime
+# COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/next.config.js ./
 
 EXPOSE 3000
 
