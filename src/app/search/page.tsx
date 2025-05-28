@@ -71,34 +71,36 @@ export default function SearchPage() {
   useEffect(() => {
     let cancel = false;
 
-    setLoading(true);
-    setError(null);
-    setPosts([]);
+    const fetchPosts = async () => {
+      setLoading(true);
+      setError(null);
+      setPosts([]);
 
-    axios
-      .post("/api/post/get", {
-        limit: 9,
-        order: sidebarData.sort,
-        category: sidebarData.category,
-        searchTerm: sidebarData.searchTerm,
-        startIndex: 0,
-      })
-      .then((res) => {
+      try {
+        const res = await axios.post("/api/post/get", {
+          limit: 9,
+          order: sidebarData.sort,
+          category: sidebarData.category,
+          searchTerm: sidebarData.searchTerm,
+          startIndex: 0,
+        });
+
         if (!cancel) {
           setPosts(res.data.posts);
           setShowMore(res.data.posts.length === 9);
         }
-      })
-      .catch(() => {
+      } catch (err) {
         if (!cancel) {
           setError("Failed to fetch posts");
         }
-      })
-      .finally(() => {
+      } finally {
         if (!cancel) {
           setLoading(false);
         }
-      });
+      }
+    };
+
+    fetchPosts();
 
     return () => {
       cancel = true;

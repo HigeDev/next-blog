@@ -1,5 +1,8 @@
-import PostCard from "./PostCard";
+"use client";
+
+import { useEffect, useState } from "react";
 import axios from "axios";
+import PostCard from "./PostCard";
 
 interface Post {
   id: number;
@@ -16,33 +19,38 @@ interface Post {
 interface RecentPostsProps {
   limit: number;
 }
-const isServer = typeof window === "undefined";
 
-const baseURL = isServer
-  ? process.env.API_BASE_URL
-  : process.env.NEXT_PUBLIC_API_BASE_URL;
-export default async function RecentPosts({ limit }: RecentPostsProps) {
-  let posts: Post[] | null = null;
+export default function RecentPosts({ limit }: RecentPostsProps) {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  try {
-    const result = await axios.post(`${baseURL}/api/post/get`, {
-      limit: limit,
-      order: "desc",
-    });
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const result = await axios.post("/api/post/get", {
+          limit,
+          order: "desc",
+        });
+        setPosts(result.data.posts);
+      } catch (error) {
+        console.error("Error getting posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const data = result.data;
-    posts = data.posts;
-  } catch (error) {
-    console.log("Error getting posts:", error);
-  }
+    fetchPosts();
+  }, [posts]);
 
   return (
     <div className="flex flex-col justify-center items-center mb-5">
       <h1 className="text-xl mt-5">Recent articles</h1>
       <div className="flex flex-wrap gap-5 mt-5 justify-center">
-        {posts?.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          posts.map((post) => <PostCard key={post.id} post={post} />)
+        )}
       </div>
     </div>
   );
