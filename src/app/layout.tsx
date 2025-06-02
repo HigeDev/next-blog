@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "./components/theme-provider";
 import Footer from "./components/Footer";
 import Header from "@/app/components/Header";
+import Head from "next/head";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
     images: ["https://higesan.store/Hige-Logo.png"],
   },
   icons: {
-    icon: "localhost:3000/Hige-Logo.png",
+    icon: "https://higesan.store/Hige-Logo.png",
   },
 };
 
@@ -57,6 +58,24 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
+        <Head>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "HigeSan",
+                url: "https://higesan.store",
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: "https://higesan.store/search?q={search_term_string}",
+                  "query-input": "required name=search_term_string",
+                },
+              }),
+            }}
+          />
+        </Head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
