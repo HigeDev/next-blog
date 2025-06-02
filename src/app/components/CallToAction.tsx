@@ -1,5 +1,4 @@
 import { BsInstagram, BsGithub, BsTwitterX, BsYoutube } from "react-icons/bs";
-
 export default function CallToAction() {
   return (
     <div className="flex flex-col sm:flex-row p-3 border border-teal-500 justify-center items-center rounded-tl-3xl rounded-br-3xl text-center">
@@ -56,9 +55,8 @@ export default function CallToAction() {
           ))}
         </div>
       </div>
-
-      <div className="p-7 flex-1 w-full flex justify-center">
-        <div className="relative w-full max-w-[500px] aspect-video">
+      <div className="p-7 flex-1">
+        <div className="relative overflow-hidden w-[300px] h-[170px] sm:w-[280px] sm:h-[140px] md:w-[400px] md:h-[200px] lg:w-[500px] lg:h-[280px]">
           <iframe
             src="https://www.youtube.com/embed/hvciTsfIYHI?si=hxYLXzbfKfnxFJoA"
             title="YouTube video player"
@@ -66,7 +64,7 @@ export default function CallToAction() {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
-            className="absolute top-0 left-0 w-full h-full rounded-lg"
+            className="absolute top-0 left-0 w-full h-full"
           ></iframe>
         </div>
       </div>

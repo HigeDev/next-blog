@@ -1,40 +1,3 @@
-# # === Build Stage ===
-# FROM node:20-alpine AS builder
-
-# WORKDIR /app
-
-# # Copy only package files
-# COPY package*.json ./
-# RUN npm install
-
-# # Copy all source code
-# COPY . .
-
-# # Generate Prisma client & Build Next.js
-# RUN npx prisma generate
-# RUN npm run build
-
-# # === Production Stage ===
-# FROM node:20-alpine
-
-# WORKDIR /app
-
-# # Install only production dependencies
-# COPY package*.json ./
-# RUN npm install --omit=dev
-
-# # Copy only necessary files for standalone Next.js
-# COPY --from=builder /app/.next/standalone ./
-# COPY --from=builder /app/.next/static ./.next/static
-# COPY --from=builder /app/public ./public
-# COPY --from=builder /app/next.config.ts ./
-
-# # If needed at runtime:
-# # COPY --from=builder /app/prisma ./prisma
-
-# EXPOSE 3000
-# CMD ["node", "server.js"]
-
 # syntax=docker.io/docker/dockerfile:1
 FROM node:18-alpine AS base
 
@@ -60,6 +23,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 COPY .env .env
+COPY prisma ./prisma
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -86,6 +50,7 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
