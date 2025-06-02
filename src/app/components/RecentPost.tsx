@@ -40,7 +40,11 @@ export default function RecentPosts({ limit }: RecentPostsProps) {
     };
 
     fetchPosts();
+HEAD
   }, []);
+
+  }, [posts]);
+51c8cd0adedc2677c5697088fcc2122b9f7ca889
 
   return (
     <div className="flex flex-col justify-center items-center mb-5">
