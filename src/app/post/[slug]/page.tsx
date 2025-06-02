@@ -1,4 +1,3 @@
-HEAD
 "use client";
 
 import React, { useEffect, useState, use } from "react";
@@ -7,16 +6,22 @@ import RecentPosts from "@/app/components/RecentPost";
 import { Button } from "flowbite-react";
 import Link from "next/link";
 import axios from "axios";
-=======
-// app/post/[slug]/page.tsx
 import ShowPostPage from "@/app/components/ShowPost";
->>>>>>> 51c8cd0adedc2677c5697088fcc2122b9f7ca889
 
+interface Post {
+  id: number;
+  content: string;
+  title: string;
+  image: string;
+  category: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: number;
+}
 interface PostPageProps {
   params: { slug: string };
 }
-
-<<<<<<< HEAD
 export default function PostPage({
   params,
 }: {
@@ -52,7 +57,9 @@ export default function PostPage({
   if (loading) {
     return (
       <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
-        <p>Loading...</p>
+        <h2 className="text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl">
+          Loading...
+        </h2>
       </main>
     );
   }
@@ -101,8 +108,4 @@ export default function PostPage({
       <RecentPosts limit={3} />
     </main>
   );
-
-export default function PostPage({ params }: PostPageProps) {
-  return <ShowPostPage slug={params.slug} />;
-51c8cd0adedc2677c5697088fcc2122b9f7ca889
 }
