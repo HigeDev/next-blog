@@ -104,7 +104,7 @@ export async function POST(req: Request) {
           .toLowerCase()
           .replace(/[^a-zA-Z0-9-]/g, "");
 
-        const post = await prisma.project.create({
+        const newProject = await prisma.project.create({
           data: {
             name,
             description,
@@ -127,7 +127,7 @@ export async function POST(req: Request) {
           await fs.writeFile(filePath, file.buffer);
           await prisma.project_Image.create({
             data: {
-              projectId: post.id,
+              projectId: newProject.id,
               image: newFileName,
             },
           });
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
 
         await prisma.project_Skill.create({
           data: {
-            projectId: post.id,
+            projectId: newProject.id,
             codeigniter: Codeigniter === "true",
             laravel: Laravel === "true",
             mysql: MySQL === "true",
@@ -160,7 +160,7 @@ export async function POST(req: Request) {
           },
         });
 
-        return resolve(NextResponse.json({ status: 201 }));
+        return resolve(NextResponse.json(newProject, { status: 201 }));
       });
 
       bb.on("error", (err) => {

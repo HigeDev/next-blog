@@ -23,7 +23,6 @@ import {
 import { TbApi, TbSeo, TbBrandVscode } from "react-icons/tb";
 import { RiJavaFill } from "react-icons/ri";
 import { useTheme } from "next-themes";
-import Image from "next/image";
 import axios from "axios";
 
 export interface Project {
@@ -75,6 +74,44 @@ export default function ProjectComponent() {
 
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  const skillList = [
+    { key: "codeigniter", Icon: SiCodeigniter, label: "CodeIgniter" },
+    { key: "laravel", Icon: SiLaravel, label: "Laravel" },
+    { key: "api", Icon: TbApi, label: "API" },
+    { key: "mysql", Icon: SiMysql, label: "MySQL" },
+    { key: "prisma", Icon: SiPrisma, label: "Prisma" },
+    { key: "typescript", Icon: SiTypescript, label: "TypeScript" },
+    { key: "javascript", Icon: SiJavascript, label: "JavaScript" },
+    { key: "tailwind", Icon: SiTailwindcss, label: "TailwindCSS" },
+    { key: "bootstrap", Icon: SiBootstrap, label: "Bootstrap" },
+    { key: "figma", Icon: SiFigma, label: "Figma" },
+    { key: "seo", Icon: TbSeo, label: "SEO" },
+    { key: "arduino", Icon: SiArduino, label: "Arduino" },
+    { key: "rstudio", Icon: SiRstudioide, label: "RStudio" },
+    { key: "java", Icon: RiJavaFill, label: "Java" },
+    { key: "androidstudio", Icon: SiAndroidstudio, label: "Android Studio" },
+    { key: "git", Icon: SiGit, label: "Git" },
+    { key: "vscode", Icon: TbBrandVscode, label: "VSCode" },
+    { key: "nextjs", Icon: SiNextdotjs, label: "Next.js" },
+    { key: "cisco", Icon: SiCisco, label: "Cisco Packet Tracker" },
+
+    // Skill dengan icon gambar khusus
+    {
+      key: "matlab",
+      Icon: () => (
+        <img src={iconMatlab} alt="Matlab icon" width={35} height={35} />
+      ),
+      label: "Matlab",
+    },
+    {
+      key: "flowbite",
+      Icon: () => (
+        <img src={iconFlowbite} alt="Flowbite icon" width={35} height={35} />
+      ),
+      label: "Flowbite",
+    },
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -149,10 +186,8 @@ export default function ProjectComponent() {
               {isEven && (
                 <div className="text-center mx-auto lg:col-span-5 col-span-12 order-1 lg:order-none">
                   <Link href={`/project/show/${project.slug}`}>
-                    <Image
+                    <img
                       src={imgUrl}
-                      width={440}
-                      height={320}
                       alt={project.name}
                       className={`w-110 h-80 rounded-2xl border-4 border-white object-cover mx-auto 
                 transition duration-1000 ease-in-out transform 
@@ -181,191 +216,29 @@ export default function ProjectComponent() {
                   {project.linkUrl} ↗
                 </a>
                 <p className="text-gray-400 mt-4">{project.description}</p>
+
                 <div className="flex flex-wrap justify-start gap-4 mt-6 text-3xl">
-                  {project.project_skill.codeigniter && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiCodeigniter className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        CodeIgniter
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.codeigniter && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiLaravel className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Laravel
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.api && (
-                    <div className="group relative flex flex-col items-center">
-                      <TbApi className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        API
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.mysql && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiMysql className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        MySQL
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.prisma && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiPrisma className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Prisma
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.typescript && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiTypescript className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        TypeScript
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.javascript && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiJavascript className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        JavaScript
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.tailwind && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiTailwindcss className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        TailwindCSS
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.bootstrap && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiBootstrap className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Bootstrap
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.figma && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiFigma className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Figma
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.seo && (
-                    <div className="group relative flex flex-col items-center">
-                      <TbSeo className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        SEO
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.arduino && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiArduino className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Arduino
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.rstudio && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiRstudioide className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        RStudio
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.java && (
-                    <div className="group relative flex flex-col items-center">
-                      <RiJavaFill className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Java
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.androidstudio && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiAndroidstudio className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Android Studio
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.git && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiGit className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Git
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.vscode && (
-                    <div className="group relative flex flex-col items-center">
-                      <TbBrandVscode className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        VSCode
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.nextjs && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiNextdotjs className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Next.js
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.cisco && (
-                    <div className="group relative flex flex-col items-center">
-                      <SiCisco className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300 cursor-pointer" />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Cisco Packet Tracker
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.matlab && (
-                    <div className="group relative flex flex-col items-center">
-                      <Image
-                        src={iconMatlab}
-                        className="cursor-pointer text-4xl"
-                        alt="Matlab icon"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Matlab
-                      </span>
-                    </div>
-                  )}
-                  {project.project_skill.flowbite && (
-                    <div className="group relative flex flex-col items-center">
-                      <Image
-                        src={iconFlowbite}
-                        className="cursor-pointer text-4xl"
-                        alt="Flowbite icon"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                        Flowbite
-                      </span>
-                    </div>
+                  {skillList.map(({ key, Icon, label }) =>
+                    project.project_skill[key as keyof ProjectSkill] ? (
+                      <div
+                        key={key}
+                        className="group relative flex flex-col items-center cursor-pointer"
+                      >
+                        <Icon className="text-gray-600 hover:text-blue-600 hover:scale-110 transition duration-300" />
+                        <span className="absolute bottom-full mb-2 px-2 py-1 text-sm text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                          {label}
+                        </span>
+                      </div>
+                    ) : null
                   )}
                 </div>
 
                 <div className="mt-6 text-center lg:text-left">
-                  <Button color="blue">View case study →</Button>
+                  <Link href={`/project/show/${project.slug}`}>
+                    <Button className="cursor-pointer" color="blue">
+                      View case study →
+                    </Button>
+                  </Link>
                 </div>
               </div>
 
@@ -373,10 +246,8 @@ export default function ProjectComponent() {
               {!isEven && (
                 <div className="text-center mx-auto lg:col-span-5 col-span-12 order-1 lg:order-none">
                   <Link href={`/project/show/${project.slug}`}>
-                    <Image
+                    <img
                       src={imgUrl}
-                      width={440}
-                      height={320}
                       alt={project.name}
                       className={`w-110 h-80 rounded-2xl border-4 border-white object-cover mx-auto 
                 transition duration-1000 ease-in-out transform 

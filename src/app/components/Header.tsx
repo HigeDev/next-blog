@@ -15,9 +15,8 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { useEffect, useState, Suspense, useCallback } from "react";
+import { useEffect, useState, Suspense, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 
 // Komponen untuk membaca searchParams dan sync ke state
 function SearchParamsReader({
@@ -27,6 +26,7 @@ function SearchParamsReader({
 }) {
   const searchParams = useSearchParams();
   const searchTermFromUrl = searchParams.get("searchTerm") || "";
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     onParamsRead(searchTermFromUrl);
@@ -41,6 +41,25 @@ export default function Header() {
   const [isMounted, setIsMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      // Kalau klik di luar formRef
+      if (formRef.current && !formRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false);
+      }
+    }
+
+    // Tambahkan listener klik ke dokumen
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      // Hapus listener saat komponen unmount
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleParamsRead = useCallback((val: string) => {
     setSearchTerm(val);
@@ -66,39 +85,62 @@ export default function Header() {
         <SearchParamsReader onParamsRead={handleParamsRead} />
       </Suspense>
 
-      <NavbarBrand href={process.env.NEXT_PUBLIC_URL}>
-        <Image
-          src="/Hige-Logo.png"
-          className="mr-3 h-6 sm:h-9"
-          width={40}
-          height={40}
-          alt="Flowbite React Logo"
-        />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-          Flowbite React
-        </span>
-      </NavbarBrand>
+      {!(
+        isSearchOpen &&
+        typeof window !== "undefined" &&
+        window.innerWidth < 1024
+      ) && (
+        <NavbarBrand href={process.env.NEXT_PUBLIC_URL}>
+          <img
+            src="/Hige-Logo.png"
+            className="mr-3 h-6 sm:h-9"
+            alt="Flowbite React Logo"
+          />
+          <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+            HigeSan
+          </span>
+        </NavbarBrand>
+      )}
 
       <SignedIn>
-        <form onSubmit={handleSubmit}>
-          <TextInput
-            type="text"
-            placeholder="Search..."
-            rightIcon={AiOutlineSearch}
-            className="hidden lg:inline"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <form
+          onSubmit={handleSubmit}
+          className="flex items-center gap-2"
+          ref={formRef}
+        >
+          {(isSearchOpen ||
+            (typeof window !== "undefined" && window.innerWidth >= 1024)) && (
+            <TextInput
+              type="text"
+              placeholder="Search..."
+              className={`${
+                isSearchOpen && window.innerWidth < 1024
+                  ? "flex-1"
+                  : "w-40 hidden lg:inline"
+              }`}
+              value={searchTerm}
+              rightIcon={AiOutlineSearch}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              autoFocus={isSearchOpen}
+            />
+          )}
+
+          {!isSearchOpen && (
+            <button
+              type="button"
+              className="w-10 lg:hidden h-10 p-0 inline-flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 mx-2 cursor-pointer"
+              onClick={() => setIsSearchOpen(true)}
+            >
+              <AiOutlineSearch size={20} />
+            </button>
+          )}
         </form>
-        <Button className="w-12 h-10 lg:hidden" color="gray" pill>
-          <AiOutlineSearch />
-        </Button>
       </SignedIn>
 
       <div className="flex md:order-2">
         <button
           onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-300 dark:border-gray-600 mx-2"
+          className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-300 dark:border-gray-600 mx-2 cursor-pointer"
           aria-label="Toggle theme"
         >
           {theme === "dark" ? (
@@ -114,7 +156,7 @@ export default function Header() {
 
         <SignedOut>
           <Link href="/sign-in">
-            <Button color="alternative">
+            <Button color="alternative" className="cursor-pointer">
               <AiOutlineLogin className="me-2 h-4 w-4" />
               Login
             </Button>
@@ -122,7 +164,7 @@ export default function Header() {
         </SignedOut>
 
         <SignedIn>
-          <NavbarToggle />
+          <NavbarToggle className="cursor-pointer" />
         </SignedIn>
       </div>
 

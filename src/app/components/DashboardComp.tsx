@@ -17,7 +17,6 @@ import {
 } from "flowbite-react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import Image from "next/image";
 import axios from "axios";
 
 // --- Types ---
@@ -142,10 +141,8 @@ export default function DashboardComp() {
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <TableCell>
-                    <Image
+                    <img
                       src={user.profilePicture}
-                      width={40}
-                      height={40}
                       alt="user"
                       className="w-10 h-10 rounded-full bg-gray-500"
                     />
@@ -180,11 +177,9 @@ export default function DashboardComp() {
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <TableCell>
-                    <Image
+                    <img
                       src={`/uploads/${post.image}`}
                       alt="post"
-                      width={56}
-                      height={40}
                       className="w-14 h-10 rounded-md bg-gray-500"
                     />
                   </TableCell>

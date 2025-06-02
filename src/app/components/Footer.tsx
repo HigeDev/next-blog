@@ -10,13 +10,8 @@ import {
   FooterTitle,
 } from "flowbite-react";
 import Link from "next/link";
-import {
-  BsFacebook,
-  BsInstagram,
-  BsTwitter,
-  BsGithub,
-  BsDribbble,
-} from "react-icons/bs";
+import { BsInstagram, BsTwitterX, BsGithub, BsYoutube } from "react-icons/bs";
+import { RiStockFill } from "react-icons/ri";
 export default function FooterCom() {
   return (
     <Footer container className="border border-t-8 border-teal-500">
@@ -28,9 +23,9 @@ export default function FooterCom() {
               className="self-center whitespace-nowrap text-lg sm:text-xl font-semibold dark:text-white"
             >
               <span className="px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
-                Next
+                Hige
               </span>
-              Blog
+              San
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-8 mt-4 sm:grid-cols-3 sm:gap-6">
@@ -38,18 +33,18 @@ export default function FooterCom() {
               <FooterTitle title="About" />
               <FooterLinkGroup col>
                 <FooterLink
-                  href="https://www.100jsprojects.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  100 JS Projects
-                </FooterLink>
-                <FooterLink
                   href="/about"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Next Blog
+                  About me
+                </FooterLink>
+                <FooterLink
+                  href="/project"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Projects
                 </FooterLink>
               </FooterLinkGroup>
             </div>
@@ -57,7 +52,7 @@ export default function FooterCom() {
               <FooterTitle title="Follow us" />
               <FooterLinkGroup col>
                 <FooterLink
-                  href="https://www.github.com/sahandghavidel"
+                  href="https://github.com/HigeDev"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -79,18 +74,23 @@ export default function FooterCom() {
         <div className="w-full sm:flex sm:items-center sm:justify-between">
           <FooterCopyright
             href="#"
-            by="Next blog"
+            by="HigeSan"
             year={new Date().getFullYear()}
           />
           <div className="flex gap-6 sm:mt-0 mt-4 sm:justify-center">
-            <FooterIcon href="#" icon={BsFacebook} />
-            <FooterIcon href="#" icon={BsInstagram} />
-            <FooterIcon href="#" icon={BsTwitter} />
             <FooterIcon
-              href="https://github.com/sahandghavidel"
-              icon={BsGithub}
+              href="https://www.instagram.com/dominicus_agfid/"
+              icon={BsInstagram}
             />
-            <FooterIcon href="#" icon={BsDribbble} />
+            <FooterIcon
+              href="https://x.com/Dominicus_Agfid"
+              icon={BsTwitterX}
+            />
+            <FooterIcon href="https://github.com/HigeDev" icon={BsGithub} />
+            <FooterIcon
+              href="https://www.youtube.com/@Hige_San"
+              icon={BsYoutube}
+            />
           </div>
         </div>
       </div>

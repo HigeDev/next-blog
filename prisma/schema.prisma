@@ -26,6 +26,7 @@ model User {
   updatedAt       DateTime @updatedAt
   posts           Post[]
   projects        Project[]
+  inboxes         Inbox[]
 }
 
 model Post {
@@ -46,7 +47,7 @@ model Project {
   id              Int      @id @default(autoincrement())
   name            String   @unique
   slug            String   @unique
-  description     String
+  description     String   @db.Text
   linkUrl         String   @default("https:/higesan.store")
   user            User     @relation(fields: [userId], references: [id])
   userId          Int
@@ -90,6 +91,17 @@ model Project_Skill {
   vscode          Boolean @default(false)
   git             Boolean @default(false)
   cisco           Boolean @default(false)
+  docker          Boolean @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Inbox {
+  id              Int      @id @default(autoincrement())
+  user            User  @relation(fields: [userId], references: [id])
+  userId          Int
+  subject         String   @default("no subject")
+  message         String   @db.Text
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }

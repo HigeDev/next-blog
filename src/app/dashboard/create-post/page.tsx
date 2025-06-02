@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import "react-quill-new/dist/quill.snow.css";
 import "react-circular-progressbar/dist/styles.css";
-import Image from "next/image";
 import axios from "axios";
 
 // Dynamic import for ReactQuill
@@ -110,9 +109,14 @@ export default function CreatePostPage() {
               }
             >
               <option value="">Select a category</option>
-              <option value="javascript">JavaScript</option>
-              <option value="reactjs">React.js</option>
-              <option value="nextjs">Next.js</option>
+              <option value="Personal Life">Personal Life</option>
+              <option value="Stock">Stock</option>
+              <option value="Programming">Programming</option>
+              <option value="Work">Work</option>
+              <option value="Holiday">Holiday</option>
+              <option value="Hobby">Hobby</option>
+              <option value="Japan">Japan</option>
+              <option value="Other">Other</option>
             </Select>
           </div>
 
@@ -130,10 +134,8 @@ export default function CreatePostPage() {
           </div>
 
           {imageUrl && (
-            <Image
+            <img
               src={imageUrl}
-              width={1280}
-              height={288}
               alt="Preview"
               className="w-full h-72 object-cover"
             />

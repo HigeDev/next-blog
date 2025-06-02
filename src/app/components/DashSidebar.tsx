@@ -12,6 +12,7 @@ import {
   HiDocumentText,
   HiUserGroup,
   HiChartPie,
+  HiInbox,
 } from "react-icons/hi";
 import { GrTask } from "react-icons/gr";
 import { useEffect, useState, Suspense, useCallback } from "react";
@@ -50,14 +51,13 @@ export default function DashSidebar() {
 
       <SidebarItems>
         <SidebarItemGroup className="flex flex-col gap-1">
-          <SidebarItem
-            as="a"
-            href="/dashboard?tab=dash"
-            active={tab === "dash" || !tab}
-            icon={HiChartPie}
-          >
-            Dashboard
-          </SidebarItem>
+          {user?.publicMetadata?.isAdmin ? (
+            <Link href="/dashboard?tab=dash">
+              <SidebarItem as="div" active={tab === "dash"} icon={HiChartPie}>
+                Dashboard
+              </SidebarItem>
+            </Link>
+          ) : null}
 
           <Link href="/dashboard?tab=profile">
             <SidebarItem
@@ -92,6 +92,13 @@ export default function DashSidebar() {
             <Link href="/dashboard?tab=users">
               <SidebarItem active={tab === "users"} icon={HiUserGroup} as="div">
                 Users
+              </SidebarItem>
+            </Link>
+          ) : null}
+          {user?.publicMetadata?.isAdmin ? (
+            <Link href="/dashboard?tab=inboxes">
+              <SidebarItem active={tab === "inboxes"} icon={HiInbox} as="div">
+                Inboxes
               </SidebarItem>
             </Link>
           ) : null}

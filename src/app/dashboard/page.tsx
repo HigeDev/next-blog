@@ -8,6 +8,7 @@ import DashProjects from "../components/DashProjects";
 import DashUsers from "../components/DashUsers";
 import DashboardComp from "../components/DashboardComp";
 import { useSearchParams } from "next/navigation";
+import DashInboxes from "../components/DashInboxes";
 
 // Komponen kecil untuk ambil nilai tab dari searchParams
 function TabReader({ onTabChange }: { onTabChange: (tab: string) => void }) {
@@ -44,6 +45,7 @@ export default function Dashboard() {
       {tab === "posts" && <DashPosts />}
       {tab === "projects" && <DashProjects />}
       {tab === "users" && <DashUsers />}
+      {tab === "inboxes" && <DashInboxes />}
       {tab === "dash" && <DashboardComp />}
     </div>
   );

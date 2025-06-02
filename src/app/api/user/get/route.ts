@@ -4,13 +4,13 @@ import { currentUser } from "@clerk/nextjs/server";
 export const POST = async (req: Request) => {
   const user = await currentUser();
 
+  if (!user?.publicMetadata?.isAdmin) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  console.log(user?.publicMetadata?.isAdmin);
+
   try {
     const data = await req.json();
-
-    if (!user?.publicMetadata?.isAdmin) {
-      return new Response("Unauthorized", { status: 401 });
-    }
-
     const startIndex = parseInt(data.startIndex) || 0;
     const limit = parseInt(data.limit) || 9;
     const sortDirection = data.sort === "asc" ? "asc" : "desc";

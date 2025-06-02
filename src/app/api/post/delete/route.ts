@@ -7,20 +7,14 @@ import path from "path";
 export async function DELETE(req: Request) {
   const user = await currentUser();
 
-  if (!user) {
+  if (!user?.publicMetadata?.isAdmin) {
     return new Response("Unauthorized", { status: 401 });
   }
+  console.log(user?.publicMetadata?.isAdmin);
 
   try {
     const data = await req.json();
-    const { postId, postImg, userId } = data;
-
-    if (
-      !user.publicMetadata.isAdmin ||
-      user.publicMetadata.userMongoId !== userId
-    ) {
-      return new Response("Unauthorized", { status: 401 });
-    }
+    const { postId, postImg } = data;
 
     const deletedPost = await prisma.post.delete({
       where: { id: postId },

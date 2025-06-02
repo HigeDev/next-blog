@@ -8,17 +8,9 @@ export default async function Home() {
       <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto ">
         <h1 className="text-3xl font-bold lg:text-6xl">Welcome to my Blog</h1>
         <p className="text-gray-500 text-sm sm:text-base">
-          Discover a variety of articles and tutorials on topics such as web
-          development, software engineering, and programming languages, all
-          brought to you through a blog built with Next.js and{" "}
-          <a
-            href="https://go.clerk.com/fgJHKlt"
-            className="text-teal-500 hover:underline"
-            target="_blank"
-          >
-            Clerk
-          </a>
-          .
+          Discover a variety of articles and tutorials on topics such as travel
+          adventures, stock trading experiences, programming languages and other
+          fascinating topics reflect on my personal journey.
         </p>
         <Link
           href="/search"

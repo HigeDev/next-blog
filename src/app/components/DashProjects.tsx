@@ -12,7 +12,6 @@ import {
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import Image from "next/image";
 import axios from "axios";
 
 interface Project {
@@ -124,10 +123,8 @@ export default function DashProjects() {
                   </TableCell>
                   <TableCell>
                     <Link href={`/project/${project.slug}`}>
-                      <Image
+                      <img
                         src={`/uploads/${project.project_images[0].image}`}
-                        width={80}
-                        height={40}
                         alt={project.name}
                         className="w-20 h-10 object-cover bg-gray-500"
                       />

@@ -1,7 +1,9 @@
+"use client";
+
+import React, { useEffect, useState, use } from "react";
 import CallToAction from "@/app/components/CallToAction";
 import RecentPosts from "@/app/components/RecentPost";
 import { Button } from "flowbite-react";
-import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
 
@@ -16,43 +18,48 @@ interface Post {
   updatedAt: string;
   userId: number;
 }
-const isServer = typeof window === "undefined";
 
-const baseURL = isServer
-  ? process.env.API_BASE_URL
-  : process.env.NEXT_PUBLIC_API_BASE_URL;
-export default async function PostPage(props: {
+export default function PostPage({
+  params,
+}: {
   params: Promise<{ slug: string }>;
 }) {
-  const { params } = props;
-  const { slug } = await params; // <<< AWAIT di sini
+  const { slug } = use(params); // <-- unwrap Promise
 
-  let post: Post | null = null;
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  try {
-    const result = await axios.post(
-      `${baseURL}/api/post/get`,
-      { slug },
-      { headers: { "Content-Type": "application/json" } }
+  useEffect(() => {
+    async function fetchPost() {
+      try {
+        const result = await axios.post(
+          "/api/post/get",
+          { slug },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        const data = result.data;
+        setPost(data.posts[0]);
+      } catch (err) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPost();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
+        <p>Loading...</p>
+      </main>
     );
-
-    const data = result.data;
-    post = data.posts[0];
-  } catch (error) {
-    post = {
-      id: 0,
-      title: "Failed to load post",
-      content: "",
-      image: "",
-      category: "",
-      slug: "",
-      createdAt: "",
-      updatedAt: "",
-      userId: 0,
-    };
   }
 
-  if (!post || post.title === "Failed to load post") {
+  if (error || !post) {
     return (
       <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
         <h2 className="text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl">
@@ -75,10 +82,8 @@ export default async function PostPage(props: {
           {post.category}
         </Button>
       </Link>
-      <Image
+      <img
         src={`/uploads/${post.image}`}
-        width={1200}
-        height={600}
         alt={post.title}
         className="mt-10 p-3 max-h-[600px] w-full object-cover"
       />

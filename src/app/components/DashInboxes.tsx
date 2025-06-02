@@ -17,65 +17,51 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import axios from "axios";
-
-interface Post {
+type InboxItem = {
   id: number;
-  title: string;
-  image: string;
-  category: string;
-  slug: string;
-  updatedAt: string;
-}
-
-export default function DashPosts() {
+  subject: string;
+  message: string;
+  createdAt: string;
+  user: {
+    id: number;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
+    profilePicture: string | null;
+  };
+};
+export default function DashInboxes() {
   const { user } = useUser();
-  const [userPosts, setUserPosts] = useState<Post[]>([]);
+  const [inboxData, setInboxData] = useState<InboxItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState<number | null>(null);
   const [postImgToDelete, setPostImgToDelete] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchInbox = async () => {
       try {
-        const res = await axios.post("/api/post/get", {
-          userId: user?.publicMetadata?.userId,
+        const res = await axios.post("/api/inbox/get", {
+          headers: { "Content-Type": "application/json" },
         });
-
-        const data = res.data;
-
-        setUserPosts(data.posts);
-        console.log(data);
+        setInboxData(res.data.inboxes);
       } catch (error: any) {
-        console.error(error.response?.data?.message || error.message);
+        console.error(
+          "Failed to fetch inbox:"
+          // error.response?.data || error.message
+        );
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (user?.publicMetadata?.isAdmin) {
-      fetchPosts();
-    }
-  }, [user?.publicMetadata?.isAdmin, user?.publicMetadata?.userId]);
+    fetchInbox();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
 
   const handleDeletePost = async () => {
     setShowModal(false);
-    try {
-      const res = await axios.delete("/api/post/delete", {
-        data: {
-          postId: postIdToDelete,
-          postImg: postImgToDelete,
-          userId: user?.publicMetadata?.userId,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = res.data;
-
-      const newPosts = userPosts.filter((post) => post.id !== postIdToDelete);
-      setUserPosts(newPosts);
-    } catch (error: any) {
-      console.error(error.response?.data?.message || error.message);
-    }
   };
 
   if (!user?.publicMetadata?.isAdmin) {
@@ -92,14 +78,15 @@ export default function DashPosts() {
         Create Post
       </Link>
       <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-        {userPosts.length > 0 ? (
+        {inboxData.length > 0 ? (
           <Table hoverable className="shadow-md">
             <TableHead>
               <TableRow>
-                <TableHeadCell>Date updated</TableHeadCell>
-                <TableHeadCell>Post image</TableHeadCell>
-                <TableHeadCell>Post title</TableHeadCell>
-                <TableHeadCell>Category</TableHeadCell>
+                <TableHeadCell>Date created</TableHeadCell>
+                <TableHeadCell>User image</TableHeadCell>
+                <TableHeadCell>user</TableHeadCell>
+                <TableHeadCell>Subject</TableHeadCell>
+                <TableHeadCell>Message</TableHeadCell>
                 <TableHeadCell>Delete</TableHeadCell>
                 <TableHeadCell>
                   <span>Edit</span>
@@ -107,49 +94,41 @@ export default function DashPosts() {
               </TableRow>
             </TableHead>
             <TableBody className="divide-y">
-              {userPosts.map((post) => (
+              {inboxData.map((item) => (
                 <TableRow
-                  key={post.id}
+                  key={item.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <TableCell>
-                    {new Date(post.updatedAt).toLocaleDateString()}
+                    {new Date(item.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <Link href={`/post/${post.slug}`}>
+                    <Link href="#">
                       <img
-                        src={`/uploads/${post.image}`}
-                        alt={post.title}
+                        src={item.user.profilePicture ?? "/default-profile.png"}
+                        alt={item.user.email ?? "User"}
                         className="w-20 h-10 object-cover bg-gray-500"
                       />
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <Link
-                      className="font-medium text-gray-900 dark:text-white"
-                      href={`/post/${post.slug}`}
-                    >
-                      {post.title}
-                    </Link>
+                    {item.user.firstName} {item.user.lastName} (
+                    {item.user.email})
                   </TableCell>
-                  <TableCell>{post.category}</TableCell>
+                  <TableCell>{item.subject}</TableCell>
+                  <TableCell>{item.message}</TableCell>
                   <TableCell>
                     <span
                       className="font-medium text-red-500 hover:underline cursor-pointer"
                       onClick={() => {
                         setShowModal(true);
-                        setPostIdToDelete(post.id);
-                        setPostImgToDelete(post.image);
                       }}
                     >
                       Delete
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Link
-                      className="text-teal-500 hover:underline"
-                      href={`/dashboard/update-post/${post.id}`}
-                    >
+                    <Link className="text-teal-500 hover:underline" href="#">
                       <span>Edit</span>
                     </Link>
                   </TableCell>
@@ -158,7 +137,7 @@ export default function DashPosts() {
             </TableBody>
           </Table>
         ) : (
-          <p>You have no posts yet!</p>
+          <p>You have no inbox yet!</p>
         )}
 
         <Modal
