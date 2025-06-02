@@ -27,6 +27,8 @@ model User {
   posts           Post[]
   projects        Project[]
   inboxes         Inbox[]
+  
+  @@map("user")
 }
 
 model Post {
@@ -40,6 +42,8 @@ model Post {
   userId          Int
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  
+  @@map("post")
 }
 
 
@@ -55,6 +59,8 @@ model Project {
   updatedAt       DateTime @updatedAt
   project_images  Project_Image[]
   project_skill   Project_Skill?
+  
+  @@map("project")
 }
 
 model Project_Image {
@@ -64,6 +70,8 @@ model Project_Image {
   image           String   @default("DefaultImage.png")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  
+  @@map("project_image")
 }
 
 model Project_Skill {
@@ -94,6 +102,8 @@ model Project_Skill {
   docker          Boolean @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  
+  @@map("project_skill")
 }
 
 model Inbox {
@@ -104,4 +114,6 @@ model Inbox {
   message         String   @db.Text
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  @@map("inbox")
 }
