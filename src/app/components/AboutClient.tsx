@@ -59,7 +59,7 @@ export default function AboutClient() {
     { icon: SiTailwindcss, label: "TailwindCSS" },
     { icon: SiBootstrap, label: "Bootstrap" },
     { icon: SiFigma, label: "Figma" },
-    // { icon: TbSeo, label: "SEO" },
+    { icon: TbSeo, label: "SEO" },
     { icon: SiRstudioide, label: "RStudio" },
     { icon: SiGit, label: "Git" },
     { icon: TbBrandVscode, label: "VSCode" },
