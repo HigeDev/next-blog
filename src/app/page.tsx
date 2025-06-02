@@ -2,6 +2,35 @@ import Link from "next/link";
 import CallToAction from "./components/CallToAction";
 import RecentPosts from "./components/RecentPost";
 
+export const metadata = {
+  title: "Home | HigeSan",
+  description:
+    "Welcome to my blog, Discover a variety of articles and tutorials reflect on my personal journey",
+  openGraph: {
+    title: "Home | HigeSan",
+    description:
+      "Welcome to my blog, Discover a variety of articles and tutorials reflect on my personal journey",
+    url: "https://higesan.store",
+    siteName: "HigeSan",
+    images: [
+      {
+        url: "https://higesan.store/Hige-Logo.png",
+        width: 1200,
+        height: 630,
+        alt: "HigeSan Homepage",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Home | HigeSan",
+    description:
+      "Welcome to my blog, Discover a variety of articles and tutorials reflect on my personal journey",
+    images: ["https://higesan.store/Hige-Logo.png"],
+  },
+};
 export default async function Home() {
   return (
     <div className="flex flex-col justify-center items-center">

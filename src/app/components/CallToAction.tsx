@@ -58,7 +58,7 @@ export default function CallToAction() {
       <div className="p-7 flex-1">
         <div className="relative overflow-hidden w-[300px] h-[170px] sm:w-[280px] sm:h-[140px] md:w-[400px] md:h-[200px] lg:w-[500px] lg:h-[280px]">
           <iframe
-            src="https://www.youtube.com/embed/hvciTsfIYHI?si=hxYLXzbfKfnxFJoA"
+            src="https://www.youtube.com/embed/zKdWFIMtKzg?si=Z0Htf0ZwwKk_505x"
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
