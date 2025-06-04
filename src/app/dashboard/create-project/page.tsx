@@ -53,7 +53,7 @@ type FormDataFields = {
   Cisco: boolean;
 };
 export default function CreateProjectPage() {
-  const { user } = useUser();
+  const { isSignedIn, user } = useUser();
   const router = useRouter();
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -194,117 +194,127 @@ export default function CreateProjectPage() {
     }
   };
 
-  return (
-    <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Upload Filament Images</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          <TextInput
-            name="name"
-            type="text"
-            placeholder="name"
-            required
-            value={formData.name}
-            className="flex-1"
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-        </div>
-        <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          <TextInput
-            name="description"
-            type="text"
-            placeholder="description"
-            required
-            value={formData.description}
-            className="flex-1"
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-          />
-        </div>
-        <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          <TextInput
-            name="linkURL"
-            type="text"
-            placeholder="linkURL"
-            required
-            value={formData.linkURL}
-            className="flex-1"
-            onChange={(e) =>
-              setFormData({ ...formData, linkURL: e.target.value })
-            }
-          />
-        </div>
-        <div className="flex flex-wrap justify-center items-center gap-6 w-full">
-          {skills.map(({ id, label, icon }) => (
-            <div key={id} className="flex items-center gap-3 relative group">
-              <Checkbox
-                id={id}
-                className="w-6 h-6"
-                checked={formData[id as keyof FormDataFields] as boolean}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    [id as keyof FormDataFields]: e.target.checked,
-                  })
-                }
-              />
-              <Label htmlFor={id} className="relative">
-                <div className="cursor-pointer text-4xl">{icon}</div>
-                <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition transform bg-gray-700 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
-                  {label}
-                </span>
-              </Label>
-            </div>
-          ))}
-        </div>
-
-        <div className="p-4 border rounded-lg">
-          <div
-            {...getRootProps()}
-            className={`border-2 border-dashed rounded-lg p-6 text-center transition ${
-              isDragActive ? "border-blue-500 bg-blue-50" : "border-gray-300"
-            }`}
-          >
-            <input {...getInputProps()} />
-            <p className="text-sm text-gray-500">
-              {isDragActive
-                ? "Drop the files here..."
-                : "Drag & drop images here, or click to select files"}
-            </p>
+  if (isSignedIn && user.publicMetadata.isAdmin) {
+    return (
+      <div className="p-3 max-w-3xl mx-auto min-h-screen">
+        <h1 className="text-2xl font-bold mb-4">Upload Filament Images</h1>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-4 sm:flex-row justify-between">
+            <TextInput
+              name="name"
+              type="text"
+              placeholder="name"
+              required
+              value={formData.name}
+              className="flex-1"
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
+          </div>
+          <div className="flex flex-col gap-4 sm:flex-row justify-between">
+            <TextInput
+              name="description"
+              type="text"
+              placeholder="description"
+              required
+              value={formData.description}
+              className="flex-1"
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+            />
+          </div>
+          <div className="flex flex-col gap-4 sm:flex-row justify-between">
+            <TextInput
+              name="linkURL"
+              type="text"
+              placeholder="linkURL"
+              required
+              value={formData.linkURL}
+              className="flex-1"
+              onChange={(e) =>
+                setFormData({ ...formData, linkURL: e.target.value })
+              }
+            />
+          </div>
+          <div className="flex flex-wrap justify-center items-center gap-6 w-full">
+            {skills.map(({ id, label, icon }) => (
+              <div key={id} className="flex items-center gap-3 relative group">
+                <Checkbox
+                  id={id}
+                  className="w-6 h-6"
+                  checked={formData[id as keyof FormDataFields] as boolean}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      [id as keyof FormDataFields]: e.target.checked,
+                    })
+                  }
+                />
+                <Label htmlFor={id} className="relative">
+                  <div className="cursor-pointer text-4xl">{icon}</div>
+                  <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition transform bg-gray-700 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
+                    {label}
+                  </span>
+                </Label>
+              </div>
+            ))}
           </div>
 
-          {previews.length > 0 && (
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              {previews.map((src, index) => (
-                <div key={index} className="relative group">
-                  <img
-                    src={src}
-                    alt={`preview-${index}`}
-                    className="w-full h-32 object-cover rounded border-2"
-                  />
-                  <button
-                    onClick={() => removeImage(index)}
-                    className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded opacity-80 hover:opacity-100"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
+          <div className="p-4 border rounded-lg">
+            <div
+              {...getRootProps()}
+              className={`border-2 border-dashed rounded-lg p-6 text-center transition ${
+                isDragActive ? "border-blue-500 bg-blue-50" : "border-gray-300"
+              }`}
+            >
+              <input {...getInputProps()} />
+              <p className="text-sm text-gray-500">
+                {isDragActive
+                  ? "Drop the files here..."
+                  : "Drag & drop images here, or click to select files"}
+              </p>
             </div>
+
+            {previews.length > 0 && (
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                {previews.map((src, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={src}
+                      alt={`preview-${index}`}
+                      className="w-full h-32 object-cover rounded border-2"
+                    />
+                    <button
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded opacity-80 hover:opacity-100"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Publishing..." : "Publish"}
+          </Button>
+
+          {publishError && (
+            <Alert className="mt-5" color="failure">
+              {publishError}
+            </Alert>
           )}
-        </div>
-
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Publishing..." : "Publish"}
-        </Button>
-
-        {publishError && (
-          <Alert className="mt-5" color="failure">
-            {publishError}
-          </Alert>
-        )}
-      </form>
-    </div>
-  );
+        </form>
+      </div>
+    );
+  } else {
+    return (
+      <h1 className="text-center text-3xl my-7 font-semibold">
+        You are not authorized to view this page
+      </h1>
+    );
+  }
 }
