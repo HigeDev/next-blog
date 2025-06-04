@@ -102,40 +102,38 @@ export default function Header() {
         </NavbarBrand>
       )}
 
-      <SignedIn>
-        <form
-          onSubmit={handleSubmit}
-          className="flex items-center gap-2"
-          ref={formRef}
-        >
-          {(isSearchOpen ||
-            (typeof window !== "undefined" && window.innerWidth >= 1024)) && (
-            <TextInput
-              type="text"
-              placeholder="Search..."
-              className={`${
-                isSearchOpen && window.innerWidth < 1024
-                  ? "flex-1"
-                  : "w-40 hidden lg:inline"
-              }`}
-              value={searchTerm}
-              rightIcon={AiOutlineSearch}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              autoFocus={isSearchOpen}
-            />
-          )}
+      <form
+        onSubmit={handleSubmit}
+        className="flex items-center gap-2"
+        ref={formRef}
+      >
+        {(isSearchOpen ||
+          (typeof window !== "undefined" && window.innerWidth >= 1024)) && (
+          <TextInput
+            type="text"
+            placeholder="Search..."
+            className={`${
+              isSearchOpen && window.innerWidth < 1024
+                ? "flex-1"
+                : "w-40 hidden lg:inline"
+            }`}
+            value={searchTerm}
+            rightIcon={AiOutlineSearch}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            autoFocus={isSearchOpen}
+          />
+        )}
 
-          {!isSearchOpen && (
-            <button
-              type="button"
-              className="w-10 lg:hidden h-10 p-0 inline-flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 mx-2 cursor-pointer"
-              onClick={() => setIsSearchOpen(true)}
-            >
-              <AiOutlineSearch size={20} />
-            </button>
-          )}
-        </form>
-      </SignedIn>
+        {!isSearchOpen && (
+          <button
+            type="button"
+            className="w-10 lg:hidden h-10 p-0 inline-flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 mx-2 cursor-pointer"
+            onClick={() => setIsSearchOpen(true)}
+          >
+            <AiOutlineSearch size={20} />
+          </button>
+        )}
+      </form>
 
       <div className="flex md:order-2">
         <button
@@ -163,24 +161,20 @@ export default function Header() {
           </Link>
         </SignedOut>
 
-        <SignedIn>
-          <NavbarToggle className="cursor-pointer" />
-        </SignedIn>
+        <NavbarToggle className="cursor-pointer" />
       </div>
 
-      <SignedIn>
-        <NavbarCollapse>
-          <NavbarLink href="/" active={path === "/"}>
-            Home
-          </NavbarLink>
-          <NavbarLink href="/about" active={path === "/about"}>
-            About
-          </NavbarLink>
-          <NavbarLink href="/project" active={path === "/project"}>
-            Projects
-          </NavbarLink>
-        </NavbarCollapse>
-      </SignedIn>
+      <NavbarCollapse>
+        <NavbarLink href="/" active={path === "/"}>
+          Home
+        </NavbarLink>
+        <NavbarLink href="/about" active={path === "/about"}>
+          About
+        </NavbarLink>
+        <NavbarLink href="/project" active={path === "/project"}>
+          Projects
+        </NavbarLink>
+      </NavbarCollapse>
     </Navbar>
   );
 }
