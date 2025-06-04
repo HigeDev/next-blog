@@ -3,7 +3,7 @@
 import React, { useEffect, useState, use } from "react";
 import CallToAction from "@/app/components/CallToAction";
 import RecentPosts from "@/app/components/RecentPost";
-import { Button } from "flowbite-react";
+import { Badge } from "flowbite-react";
 import Link from "next/link";
 import axios from "axios";
 import ShowPostPage from "@/app/components/ShowPost";
@@ -32,6 +32,28 @@ export default function PostPage({
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const getBadgeColor = (category: string): string => {
+    switch (category) {
+      case "Personal Life":
+        return "purple";
+      case "Stock":
+        return "warning";
+      case "Programming":
+        return "success";
+      case "Work":
+        return "gray";
+      case "Holiday":
+        return "pink";
+      case "Hobby":
+        return "info";
+      case "Japan":
+        return "indigo";
+      case "Other":
+        return "dark";
+      default:
+        return "gray";
+    }
+  };
 
   useEffect(() => {
     async function fetchPost() {
@@ -81,27 +103,30 @@ export default function PostPage({
       </h1>
       <Link
         href={`/search?category=${post.category}`}
-        className="self-center mt-5"
+        className="self-center mt-2"
       >
-        <Button color="gray" pill size="xs">
+        <Badge
+          color={getBadgeColor(post.category)}
+          className="w-fit italic text-[14px]"
+        >
           {post.category}
-        </Button>
+        </Badge>
       </Link>
-      <div className="flex justify-between p-0 mx-auto w-full max-w-3xl text-xs">
+      <div className="flex justify-between p-0 mx-auto w-full max-w-4xl text-xs">
         <img
           src={`/uploads/${post.image}`}
           alt={post.title}
-          className="mt-2 p-3 max-h-[400px] w-full object-cover"
+          className="mt-2 p-3 max-h-[600px] w-full object-cover"
         />
       </div>
-      <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl">
+      <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-3xl">
         <span>{new Date(post.createdAt).toLocaleDateString()}</span>
         <span className="italic">
           {(post.content.length / 1000).toFixed(0)} mins read
         </span>
       </div>
       <div
-        className="p-3 max-w-2xl mx-auto w-full post-content"
+        className="p-3 max-w-3xl mx-auto w-full post-content"
         dangerouslySetInnerHTML={{ __html: post.content }}
       ></div>
       <div className="max-w-4xl mx-auto w-full">

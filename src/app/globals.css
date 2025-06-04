@@ -123,4 +123,67 @@ html {
   body {
     @apply bg-background text-foreground;
   }
+  .post-content h1 {
+    @apply text-4xl font-bold mt-5 mb-5;
+  }
+  .post-content h2 {
+    @apply text-3xl font-semibold mt-4 mb-4;
+  }
+  .post-content h3 {
+    @apply text-2xl font-semibold mt-3 mb-3;
+  }
+  .post-content h4 {
+    @apply text-xl font-semibold mt-2 mb-2;
+  }
+
+  /* Ordered List */
+  .post-content ol {
+    @apply list-decimal ml-6 my-4;
+  }
+
+  /* Ordered List (default) */
+  .post-content ol li[data-list="ordered"] {
+    list-style-type: decimal;
+    margin-left: 1rem;
+  }
+  .post-content ol li[data-list="ordered"] {
+    position: relative;
+    padding-left: 1em;
+  }
+
+  /* Bullet List (override) */
+  .post-content ol li[data-list="bullet"] {
+    list-style-type: disc;
+    margin-left: 1rem;
+  }
+  .post-content ol li[data-list="bullet"] {
+    position: relative;
+    padding-left: 1em;
+  }
+
+  /* List item umum */
+  .post-content li {
+    @apply mb-1;
+  }
+
+  /* === Indentasi dinamis React Quill === */
+  .post-content ol li.ql-indent-1 {
+    margin-left: 3rem;
+  }
+  .post-content ol li.ql-indent-2 {
+    margin-left: 3rem;
+  }
+  .post-content ol li.ql-indent-3 {
+    margin-left: 3rem;
+  }
+
+  /* Handle span.q-ui agar tidak tampil */
+  .post-content .ql-ui {
+    @apply hidden;
+  }
+
+  /* Link styling */
+  .post-content a {
+    @apply text-blue-600 underline hover:text-blue-800 transition;
+  }
 }
