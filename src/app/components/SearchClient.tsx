@@ -178,9 +178,14 @@ export default function SearchClient() {
               onChange={handleChange}
             >
               <option value="">Uncategorized</option>
-              <option value="reactjs">React.js</option>
-              <option value="nextjs">Next.js</option>
-              <option value="javascript">JavaScript</option>
+              <option value="Personal Life">Personal Life</option>
+              <option value="Stock">Stock</option>
+              <option value="Programming">Programming</option>
+              <option value="Work">Work</option>
+              <option value="Holiday">Holiday</option>
+              <option value="Hobby">Hobby</option>
+              <option value="Japan">Japan</option>
+              <option value="Other">Other</option>
             </Select>
           </div>
           <Button type="submit" outline>

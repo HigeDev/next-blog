@@ -9,10 +9,8 @@ import "react-quill-new/dist/quill.snow.css";
 import "react-circular-progressbar/dist/styles.css";
 import axios from "axios";
 
-// Dynamic import for ReactQuill
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
-// Type dipindahkan ke luar komponen
 type FormDataFields = {
   title: string;
   content: string;
@@ -84,9 +82,7 @@ export default function CreatePostPage() {
   if (isSignedIn && user.publicMetadata.isAdmin) {
     return (
       <div className="p-3 max-w-3xl mx-auto min-h-screen">
-        <h1 className="text-center text-3xl my-7 font-semibold">
-          Create a post
-        </h1>
+        <h1 className="text-center text-3xl my-7 font-semibold">Create Post</h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 sm:flex-row justify-between">
             <TextInput

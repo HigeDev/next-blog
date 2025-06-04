@@ -209,9 +209,10 @@ export default function ProjectPage({
         <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs">
           <span>{new Date(project.createdAt).toLocaleDateString()}</span>
         </div>
-        <div className="max-w-2xl mx-auto w-full post-content">
-          <p className="mt-4">{project.description}</p>
-        </div>
+        <div
+          className="p-3 max-w-3xl mx-auto w-full post-content"
+          dangerouslySetInnerHTML={{ __html: project.description }}
+        ></div>
       </div>
       <div className="text-3xl p-3 border border-teal-500 items-center text-center rounded-tl-3xl rounded-br-3xl">
         <h3>Tools :</h3>

@@ -25,6 +25,11 @@ import {
 import { TbApi, TbSeo, TbBrandVscode } from "react-icons/tb";
 import { RiJavaFill } from "react-icons/ri";
 import axios from "axios";
+import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css";
+import "react-circular-progressbar/dist/styles.css";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 type FormDataFields = {
   name: string;
@@ -197,7 +202,9 @@ export default function CreateProjectPage() {
   if (isSignedIn && user.publicMetadata.isAdmin) {
     return (
       <div className="p-3 max-w-3xl mx-auto min-h-screen">
-        <h1 className="text-2xl font-bold mb-4">Upload Filament Images</h1>
+        <h1 className="text-center text-3xl my-7 font-semibold">
+          Create Project
+        </h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 sm:flex-row justify-between">
             <TextInput
@@ -214,19 +221,6 @@ export default function CreateProjectPage() {
           </div>
           <div className="flex flex-col gap-4 sm:flex-row justify-between">
             <TextInput
-              name="description"
-              type="text"
-              placeholder="description"
-              required
-              value={formData.description}
-              className="flex-1"
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-            />
-          </div>
-          <div className="flex flex-col gap-4 sm:flex-row justify-between">
-            <TextInput
               name="linkURL"
               type="text"
               placeholder="linkURL"
@@ -238,6 +232,15 @@ export default function CreateProjectPage() {
               }
             />
           </div>
+          <ReactQuill
+            theme="snow"
+            placeholder="Write description..."
+            className="h-72 mb-12"
+            value={formData.description}
+            onChange={(value) => {
+              setFormData({ ...formData, description: value });
+            }}
+          />
           <div className="flex flex-wrap justify-center items-center gap-6 w-full">
             {skills.map(({ id, label, icon }) => (
               <div key={id} className="flex items-center gap-3 relative group">
