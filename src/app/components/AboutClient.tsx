@@ -199,7 +199,7 @@ export default function AboutClient() {
               with others to create amazing applications.
             </p>
             <div className="mt-6 flex flex-col lg:flex-row items-center gap-4 lg:justify-start justify-center">
-              <a href="/CV-CDR.pdf" download>
+              <a href="/CV-CDR-Domi.pdf" download>
                 <Button
                   className="flex items-center gap-2 cursor-pointer rounded-xl border border-teal-500 shadow-md hover:shadow-lg hover:bg-gray-100 hover:text-gray-600 transition duration-300"
                   color="blue"
