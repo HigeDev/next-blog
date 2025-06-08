@@ -59,7 +59,6 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <Head>
-          <link rel="icon" type="image/png" href="/Hige-Logo.png" />
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
