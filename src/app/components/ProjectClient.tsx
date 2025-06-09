@@ -183,7 +183,7 @@ export default function ProjectClient() {
           return (
             <div
               key={project.id}
-              className="grid gap-5 lg:grid-cols-12 items-start my-16"
+              className="grid gap-5 lg:grid-cols-12 items-start my-16 border-b border-gray-300 pb-8"
             >
               {/* Image kiri */}
               {isEven && (
