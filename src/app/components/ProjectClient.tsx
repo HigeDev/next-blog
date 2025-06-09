@@ -223,9 +223,9 @@ export default function ProjectClient() {
                         .replace(/<[^>]+>/g, " ")
                         .replace(/\s+/g, " ")
                         .trim()
-                        .substring(0, 100) +
+                        .substring(0, 150) +
                       (project.description.replace(/<[^>]+>/g, " ").trim()
-                        .length > 100
+                        .length > 150
                         ? "..."
                         : ""),
                   }}
