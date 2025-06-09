@@ -6,7 +6,7 @@ export const POST = async (req: Request) => {
     console.log(data);
 
     const startIndex = parseInt(data.startIndex) || 0;
-    const limit = parseInt(data.limit) || 9;
+    const limit = parseInt(data.limit) || 50;
     const sortDirection = data.order === "asc" ? "asc" : "desc";
 
     const whereClause: any = {};
