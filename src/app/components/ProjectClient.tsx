@@ -19,6 +19,7 @@ import {
   SiGit,
   SiNextdotjs,
   SiCisco,
+  SiDocker,
 } from "react-icons/si";
 import { TbApi, TbSeo, TbBrandVscode } from "react-icons/tb";
 import { RiJavaFill } from "react-icons/ri";
@@ -64,6 +65,7 @@ export interface ProjectSkill {
   vscode: boolean;
   git: boolean;
   cisco: boolean;
+  docker: boolean;
 }
 interface ImageLoadState {
   [projectId: number]: boolean;
@@ -95,6 +97,7 @@ export default function ProjectClient() {
     { key: "vscode", Icon: TbBrandVscode, label: "VSCode" },
     { key: "nextjs", Icon: SiNextdotjs, label: "Next.js" },
     { key: "cisco", Icon: SiCisco, label: "Cisco Packet Tracker" },
+    { key: "docker", Icon: SiDocker, label: "Docker" },
 
     // Skill dengan icon gambar khusus
     {
