@@ -118,7 +118,7 @@ export default function ProjectClient() {
       try {
         const res = await axios.post(
           "/api/project/get",
-          { limit: 9, order: "asc" },
+          { limit: 9, order: "desc" },
           { headers: { "Content-Type": "application/json" } }
         );
         const data = res.data;

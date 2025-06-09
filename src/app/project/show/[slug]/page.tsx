@@ -257,17 +257,22 @@ export default function ProjectPage({
         </div>
       </div>
 
-      <Modal show={openModal} onClose={() => setOpenModal(false)} dismissible>
+      <Modal
+        show={openModal}
+        onClose={() => setOpenModal(false)}
+        dismissible
+        size="6xl"
+      >
         <ModalHeader className="p-2">
           {project.name} - Preview Image
         </ModalHeader>
-        <ModalBody className="p-2">
+        <ModalBody className="p-2 max-h-[90vh] overflow-y-auto">
           {selectedIndex !== null && project.project_images && (
-            <div className="group relative w-full max-w-xs sm:max-w-md lg:max-w-5xl">
+            <div className="group relative w-full max-w-7xl mx-auto max-h-[90vh]">
               <img
                 src={`/uploads/${project.project_images[selectedIndex].image}`}
                 alt={`Selected ${project.name}`}
-                className="w-full h-auto rounded"
+                className="w-full h-auto max-h-[90vh] object-contain rounded"
               />
 
               {/* Tombol kiri */}
