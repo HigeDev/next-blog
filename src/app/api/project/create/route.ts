@@ -85,6 +85,7 @@ export async function POST(req: Request) {
           Matlab,
           Flowbite,
           Cisco,
+          Docker,
         } = fields;
         console.log(fields);
 
@@ -157,6 +158,7 @@ export async function POST(req: Request) {
             vscode: VSCode === "true",
             git: Git === "true",
             cisco: Cisco === "true",
+            docker: Docker === "true",
           },
         });
 

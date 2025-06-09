@@ -21,6 +21,7 @@ import {
   SiGit,
   SiNextdotjs,
   SiCisco,
+  SiDocker,
 } from "react-icons/si";
 import { TbApi, TbSeo, TbBrandVscode } from "react-icons/tb";
 import { RiJavaFill } from "react-icons/ri";
@@ -56,6 +57,7 @@ type FormDataFields = {
   Matlab: boolean;
   Flowbite: boolean;
   Cisco: boolean;
+  Docker: boolean;
 };
 export default function CreateProjectPage() {
   const { isSignedIn, user } = useUser();
@@ -89,6 +91,7 @@ export default function CreateProjectPage() {
     Matlab: false,
     Flowbite: false,
     Cisco: false,
+    Docker: false,
   });
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -139,6 +142,7 @@ export default function CreateProjectPage() {
     { id: "VSCode", label: "VSCode", icon: <TbBrandVscode /> },
     { id: "Git", label: "Git", icon: <SiGit /> },
     { id: "Cisco", label: "Cisco Packet Tracker", icon: <SiCisco /> },
+    { id: "Docker", label: "Docker", icon: <SiDocker /> },
     {
       id: "Matlab",
       label: "Matlab",
