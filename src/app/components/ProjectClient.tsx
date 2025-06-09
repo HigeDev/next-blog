@@ -215,7 +215,21 @@ export default function ProjectClient() {
                 >
                   {project.linkUrl} ↗
                 </a>
-                <p className="text-gray-400 mt-4">{project.description}</p>
+                <p
+                  className="text-gray-400 mt-4"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      project.description
+                        .replace(/<[^>]+>/g, " ")
+                        .replace(/\s+/g, " ")
+                        .trim()
+                        .substring(0, 100) +
+                      (project.description.replace(/<[^>]+>/g, " ").trim()
+                        .length > 100
+                        ? "..."
+                        : ""),
+                  }}
+                ></p>
 
                 <div className="flex flex-wrap justify-start gap-4 mt-6 text-3xl">
                   {skillList.map(({ key, Icon, label }) =>
