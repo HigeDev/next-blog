@@ -164,15 +164,22 @@ export default function UpdatePostPage() {
               className="flex-1"
             />
             <Select
-              value={formData.category || "uncategorized"}
+              name="category"
+              required
+              value={formData.category}
               onChange={(e) =>
                 setFormData({ ...formData, category: e.target.value })
               }
             >
-              <option value="uncategorized">Select a category</option>
-              <option value="javascript">JavaScript</option>
-              <option value="reactjs">React.js</option>
-              <option value="nextjs">Next.js</option>
+              <option value="">Select a category</option>
+              <option value="Personal Life">Personal Life</option>
+              <option value="Stock">Stock</option>
+              <option value="Programming">Programming</option>
+              <option value="Work">Work</option>
+              <option value="Holiday">Holiday</option>
+              <option value="Hobby">Hobby</option>
+              <option value="Japan">Japan</option>
+              <option value="Other">Other</option>
             </Select>
           </div>
           <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
