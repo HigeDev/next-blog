@@ -216,7 +216,7 @@ export default function ProjectClient() {
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:underline text-sm"
                 >
-                  {project.linkUrl} ↗
+                  Project Link ↗
                 </a>
                 <p
                   className="text-gray-400 mt-4"
